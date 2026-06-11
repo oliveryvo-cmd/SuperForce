@@ -913,6 +913,12 @@ body{background:#000;overflow:hidden;font-family:'Segoe UI',sans-serif;color:#ff
 .idx-card{background:rgba(255,255,255,0.02);border:1px solid #0f0f1e;border-radius:6px;padding:12px 10px;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;transition:all 0.15s;position:relative;}
 .idx-card:hover{border-color:#8b5cf633;background:rgba(139,92,246,0.04);transform:translateY(-1px);}
 .idx-card.caught{border-color:#4ade8033;}
+.idx-card.unseen{filter:brightness(0.7);}
+.idx-card.unseen .idx-icon{filter:brightness(0) saturate(0) opacity(0.15);font-size:2rem;}
+.idx-card.unseen .idx-name{color:#222;letter-spacing:4px;}
+.idx-card.unseen .idx-type{opacity:0.15;}
+.idx-card.unseen .idx-stats{opacity:0.08;}
+.idx-card.unseen .idx-rarity{opacity:0.1;}
 .idx-card .idx-num{position:absolute;top:6px;left:8px;font-size:0.52rem;color:#222;letter-spacing:1px;}
 .idx-card .idx-caught-badge{position:absolute;top:5px;right:7px;font-size:0.6rem;color:#4ade80;}
 .idx-card .idx-icon{font-size:2rem;line-height:1;}
@@ -920,6 +926,13 @@ body{background:#000;overflow:hidden;font-family:'Segoe UI',sans-serif;color:#ff
 .idx-card .idx-type{font-size:0.52rem;letter-spacing:2px;padding:2px 7px;border-radius:2px;border:1px solid;margin-top:1px;}
 .idx-card .idx-rarity{font-size:0.6rem;letter-spacing:1px;color:#444;}
 .idx-card .idx-stats{font-size:0.52rem;color:#333;text-align:center;line-height:1.6;}
+.idx-card.daily{border-color:#f59e0b88 !important;box-shadow:0 0 10px #f59e0b22;}
+.idx-card.daily .idx-num::after{content:' ⭐';color:#f59e0b;}
+/* Share modal */
+#share-modal{position:fixed;inset:0;z-index:700;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.88);pointer-events:all;}
+#share-card-box{text-align:center;max-width:300px;width:90%;border-radius:16px;padding:28px 24px;}
+/* Daily spawn ring */
+@keyframes dailyRing{0%,100%{opacity:0.6;transform:scale(1);}50%{opacity:1;transform:scale(1.08);}}
 /* Detail panel */
 #idx-detail{position:fixed;inset:0;background:rgba(0,0,0,0.85);display:none;z-index:96;align-items:center;justify-content:center;pointer-events:all;}
 #idx-detail-box{background:#050510;border:1px solid #1a1a2a;border-radius:10px;padding:28px 32px;max-width:380px;width:90%;position:relative;}
@@ -3466,7 +3479,79 @@ function makeChaosMesh(){
   return g;
 }
 
-function spawnWildSuper(defIdx, x, z){
+// ── SHARE CARD ───────────────────────────────────────────────────────────────
+function showShareCard(def){
+  const existing=document.getElementById('share-modal');
+  if(existing) existing.remove();
+  const col=TYPE_COLORS[def.type]||'#8b5cf6';
+  const stars='★'.repeat(def.rarity||1)+'☆'.repeat(Math.max(0,5-(def.rarity||1)));
+  const modal=document.createElement('div');
+  modal.id='share-modal';
+  modal.style.cssText='position:fixed;inset:0;z-index:700;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.88);pointer-events:all';
+  modal.innerHTML=`
+  <div id="share-card-box" style="background:linear-gradient(135deg,#06040f,#0d0a1e);border:2px solid ${col}55;border-radius:16px;padding:28px 24px;text-align:center;box-shadow:0 0 60px ${col}22">
+    <div style="font-size:0.42rem;letter-spacing:5px;color:${col};margin-bottom:14px">✦ SUPERFORCE ✦</div>
+    <div style="font-size:5rem;filter:drop-shadow(0 0 24px ${col});line-height:1;margin-bottom:14px">${def.icon}</div>
+    <div style="font-size:1.15rem;font-weight:900;letter-spacing:5px;color:#fff;margin-bottom:6px">${def.name.toUpperCase()}</div>
+    <div style="font-size:0.48rem;letter-spacing:3px;color:${col};background:${col}11;border:1px solid ${col}33;padding:4px 14px;border-radius:20px;display:inline-block;margin-bottom:12px">${def.type.toUpperCase()}</div>
+    <div style="font-size:1rem;color:${col};letter-spacing:3px;margin-bottom:14px">${stars}</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px;margin-bottom:16px">
+      ${['HP','ATK','DEF','SPD'].map((k,j)=>`<div style="background:${col}0a;border:1px solid ${col}22;border-radius:6px;padding:7px 4px"><div style="font-size:0.4rem;letter-spacing:2px;color:#555;margin-bottom:2px">${k}</div><div style="font-size:0.85rem;font-weight:900;color:${col}">${[def.hp,def.attack,def.defense,def.speed][j]}</div></div>`).join('')}
+    </div>
+    <div style="font-size:0.42rem;letter-spacing:3px;color:#333;border-top:1px solid #111;padding-top:12px;margin-bottom:16px">CAUGHT BY ${(myName||'TRAINER').toUpperCase()} · SUPERFORCE</div>
+    <div style="display:flex;gap:8px;justify-content:center">
+      ${(typeof navigator!=='undefined'&&navigator.share)?`<button onclick="shareSuper('${def.name.replace(/'/g,"\\'")}','${col}')" style="flex:1;padding:10px;background:${col}22;border:1px solid ${col}66;color:${col};border-radius:6px;font-size:0.58rem;letter-spacing:2px;cursor:pointer;font-family:monospace">📤 SHARE</button>`:''}
+      <button onclick="document.getElementById('share-modal').remove()" style="flex:1;padding:10px;background:transparent;border:1px solid #333;color:#555;border-radius:6px;font-size:0.58rem;letter-spacing:2px;cursor:pointer;font-family:monospace">✕ CLOSE</button>
+    </div>
+  </div>`;
+  document.body.appendChild(modal);
+  modal.addEventListener('click',e=>{if(e.target===modal) modal.remove();});
+}
+
+async function shareSuper(name){
+  try{
+    await navigator.share({
+      title:`I caught ${name} in SuperForce!`,
+      text:`Just caught ${name} — a free browser RPG with 300+ superheroes. No download needed!\n`,
+      url:'https://truongnvo-cmd.github.io/SuperForce/'
+    });
+  }catch(e){}
+}
+
+// ── DAILY RARE SPAWNS ────────────────────────────────────────────────────────
+window.dailySpawnIndices=[];
+function initDailySpawns(){
+  const now=new Date();
+  const dateKey=`${now.getFullYear()}${now.getMonth()}${now.getDate()}`;
+  // Seeded deterministic RNG based on today's date
+  let seed=dateKey.split('').reduce((a,c)=>((a<<5)-a)+c.charCodeAt(0)|0,0)>>>0;
+  function sr(){ seed=Math.imul(1664525,seed)+1013904223>>>0; return seed/0xffffffff; }
+  // Pick 3 rare daily supers (rarity 3+) — same for every player today
+  const pool=SUPER_DEFS.map((d,i)=>i).filter(i=>(SUPER_DEFS[i].rarity||1)>=3);
+  const picks=[];
+  while(picks.length<3){ const p=pool[Math.floor(sr()*pool.length)]; if(!picks.includes(p)) picks.push(p); }
+  window.dailySpawnIndices=picks;
+  // Record which ones player already caught today
+  const caughtToday=new Set(JSON.parse(localStorage.getItem('sf_daily_caught_'+dateKey)||'[]'));
+  picks.forEach((defIdx,slot)=>{
+    const def=SUPER_DEFS[defIdx];
+    if(caughtToday.has(def.name)) return;
+    const ang=(slot/3)*Math.PI*2, dist=18+slot*6;
+    spawnWildSuper(defIdx, Math.cos(ang)*dist, Math.sin(ang)*dist, true);
+  });
+  // Notify on first visit today
+  if(localStorage.getItem('sf_daily_date')!==dateKey){
+    localStorage.setItem('sf_daily_date',dateKey);
+    setTimeout(()=>{
+      const names=picks.map(i=>SUPER_DEFS[i].icon+' '+SUPER_DEFS[i].name).join('  ');
+      notify(`⭐ TODAY'S SUPERS: ${names}`,'good');
+    },4000);
+  }
+  // Store dateKey for catch recording
+  window.dailyDateKey=dateKey;
+}
+
+function spawnWildSuper(defIdx, x, z, isDaily=false){
   const def = SUPER_DEFS[defIdx];
   const grp = new THREE.Group();
 
@@ -3476,24 +3561,32 @@ function spawnWildSuper(defIdx, x, z){
     grp.add(makeProcMesh(def));
   }
 
-  // Name sprite
-  const c=document.createElement('canvas'); c.width=220;c.height=44;
+  // Name sprite — daily supers get a ⭐ prefix and gold color
+  const c=document.createElement('canvas'); c.width=260;c.height=44;
   const ctx=c.getContext('2d');
-  ctx.fillStyle=def.color; ctx.font='bold 20px monospace'; ctx.textAlign='center'; ctx.fillText(def.name,110,30);
+  const label = isDaily ? `⭐ ${def.name}` : def.name;
+  ctx.fillStyle = isDaily ? '#f59e0b' : def.color;
+  ctx.font='bold 20px monospace'; ctx.textAlign='center'; ctx.fillText(label,130,30);
   const spr=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c),depthTest:false}));
   const labelHeights={'CHAOS LIGHTNING':3.2,'IRON TITAN':2.8,'VOLT STRIKER':2.4,'INFERNO REX':2.8,'PHANTOM':2.2,'GLACIUS':2.6,'TERRA GOLEM':3.0,'SOLAR FIST':2.6};
   const labelY = labelHeights[def.name] || (MESH_MAKERS[def.name] ? 2.5 : 2.4);
-  spr.position.y=labelY; spr.scale.set(2.5,0.55,1); grp.add(spr);
+  spr.position.y=labelY; spr.scale.set(2.8,0.55,1); grp.add(spr);
+
+  // Daily supers get a golden point light glow
+  if(isDaily){
+    const glow=new THREE.PointLight(0xf59e0b, 1.5, 6);
+    glow.position.y=1.5; grp.add(glow);
+  }
 
   grp.position.set(x,0,z);
   grp.traverse(c=>{if(c.isMesh){c.castShadow=true;c.receiveShadow=true;}});
   scene.add(grp);
-  // Rare sparkle effect for rarity 4-5
   if(def.rarity>=4 && grp) setTimeout(()=>{ if(grp) addRareSparkles(grp, def.rarity); }, 100);
-  wildSupers.push({grp, defIdx, bobPhase:Math.random()*Math.PI*2, roamDir:Math.random()*Math.PI*2, roamT:0});
+  wildSupers.push({grp, defIdx, bobPhase:Math.random()*Math.PI*2, roamDir:Math.random()*Math.PI*2, roamT:0, isDaily});
 }
 
-// Spawn initial wild supers
+// Spawn initial wild supers + daily featured supers
+initDailySpawns();
 for(let i=0;i<7;i++){
   const angle=Math.random()*Math.PI*2, dist=10+Math.random()*35;
   spawnWildSuper(Math.floor(Math.random()*SUPER_DEFS.length), Math.cos(angle)*dist, Math.sin(angle)*dist);
@@ -4120,6 +4213,13 @@ function tryCatch(wildIdx){
       buildTeamBar();
       gainTrainerXp(30 + (def.rarity||1)*10, 'catch');
       notify(`✓ Caught ${def.name}!`,'good');
+      // Record daily catch
+      if(w.isDaily && window.dailyDateKey){
+        const dc=JSON.parse(localStorage.getItem('sf_daily_caught_'+window.dailyDateKey)||'[]');
+        if(!dc.includes(def.name)){ dc.push(def.name); localStorage.setItem('sf_daily_caught_'+window.dailyDateKey,JSON.stringify(dc)); }
+      }
+      // Show share card for rarity 3+
+      if((def.rarity||1)>=3) setTimeout(()=>showShareCard(def),400);
       if(w.grp) scene.remove(w.grp);
       wildSupers.splice(wildIdx,1);
       setTimeout(()=>{
@@ -6197,6 +6297,7 @@ function buildIndex(){
   grid.innerHTML='';
   const caughtNames=caughtRegistry.size>0 ? caughtRegistry : new Set(team.map(s=>s.name));
   const q=indexQuery.toLowerCase();
+  const dailyDefs=new Set((window.dailySpawnIndices||[]).map(i=>SUPER_DEFS[i]?.name));
   let shown=0;
   SUPER_DEFS.forEach((def,i)=>{
     if(indexFilter!=='all' && def.type!==indexFilter) return;
@@ -6205,20 +6306,25 @@ function buildIndex(){
     const col=TYPE_COLORS[def.type]||'#aaa';
     const stars='★'.repeat(def.rarity)+'☆'.repeat(5-def.rarity);
     const caught=caughtNames.has(def.name);
+    const isDaily=dailyDefs.has(def.name);
     const card=document.createElement('div');
-    card.className='idx-card'+(caught?' caught':'');
+    card.className='idx-card'+(caught?' caught':'')+(isDaily?' daily':'')+((!caught&&!q)?' unseen':'');
     card.innerHTML=`
       <span class="idx-num">#${String(i+1).padStart(3,'0')}</span>
       ${caught?'<span class="idx-caught-badge">✓</span>':''}
+      ${isDaily&&!caught?'<span style="position:absolute;top:5px;right:7px;font-size:0.55rem;color:#f59e0b;letter-spacing:1px;">TODAY</span>':''}
       <div class="idx-icon">${def.icon}</div>
-      <div class="idx-name">${def.name}</div>
+      <div class="idx-name">${caught?def.name:'???'}</div>
       <div class="idx-type" style="color:${col};border-color:${col}44">${def.type.toUpperCase()}</div>
-      <div class="idx-rarity" style="color:${col}88;font-size:0.58rem">${stars}</div>
-      <div class="idx-stats">HP ${def.hp} · ATK ${def.attack}<br>DEF ${def.defense} · SPD ${def.speed}</div>`;
-    card.onclick=()=>openIndexDetail(i);
+      <div class="idx-rarity" style="color:${col}88;font-size:0.58rem">${caught?stars:'?????'}</div>
+      <div class="idx-stats">${caught?`HP ${def.hp} · ATK ${def.attack}<br>DEF ${def.defense} · SPD ${def.speed}`:''}</div>`;
+    card.onclick=()=>caught?openIndexDetail(i):notify('Catch this super to reveal its data!','warn');
     grid.appendChild(card);
   });
-  document.getElementById('index-count').textContent=`${shown} / 300`;
+  // Show caught count prominently
+  const total=SUPER_DEFS.length;
+  const caughtCount=SUPER_DEFS.filter(d=>caughtNames.has(d.name)).length;
+  document.getElementById('index-count').textContent=`${caughtCount} / ${total} CAUGHT`;
   // Color the type filter buttons
   document.querySelectorAll('.type-filter').forEach(btn=>{
     const t=btn.dataset.type;
