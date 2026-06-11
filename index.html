@@ -2242,24 +2242,37 @@ const TYPE_COLORS = {
 })();
 
 // ── Renderer ──────────────────────────────────────────────────────────────────
-const renderer = new THREE.WebGLRenderer({antialias:false, powerPreference:'high-performance'});
-renderer.setPixelRatio(1);
+const renderer = new THREE.WebGLRenderer({antialias:true, powerPreference:'high-performance'});
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setSize(innerWidth,innerHeight);
-renderer.shadowMap.enabled=false;
+renderer.shadowMap.enabled=true;
+renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+renderer.toneMapping=THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure=1.1;
 renderer.domElement.id='game-canvas';
 document.body.appendChild(renderer.domElement);
 window.addEventListener('resize',()=>{renderer.setSize(innerWidth,innerHeight);camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();});
 
 // ── Scene ─────────────────────────────────────────────────────────────────────
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x1a0a2e);
-scene.fog = new THREE.FogExp2(0x1a0a2e, 0.022);
+scene.background = new THREE.Color(0x0d0520);
+scene.fog = new THREE.FogExp2(0x0d0520, 0.018);
 
 const hemi = new THREE.HemisphereLight(0x9966ff, 0x221144, 1.0);
 scene.add(hemi);
 scene.add(new THREE.AmbientLight(0x221188, 0.5));
-const sun = new THREE.DirectionalLight(0xfff4e0, 2.0);
+const sun = new THREE.DirectionalLight(0xfff4e0, 2.5);
 sun.position.set(30,60,20);
+sun.castShadow=true;
+sun.shadow.mapSize.width=2048;
+sun.shadow.mapSize.height=2048;
+sun.shadow.camera.near=1;
+sun.shadow.camera.far=200;
+sun.shadow.camera.left=-80;
+sun.shadow.camera.right=80;
+sun.shadow.camera.top=80;
+sun.shadow.camera.bottom=-80;
+sun.shadow.bias=-0.0005;
 scene.add(sun);
 const rim = new THREE.DirectionalLight(0x6633cc, 0.6);
 rim.position.set(-20,10,-30);
@@ -2356,20 +2369,33 @@ let camYaw=0, camPitch=0.35;
 const CAM_DIST=8, CAM_HEIGHT=3;
 
 // ── World ─────────────────────────────────────────────────────────────────────
-// Ground
+// Ground with rolling terrain
+const groundGeo = new THREE.PlaneGeometry(200,200,80,80);
+const groundPos = groundGeo.attributes.position;
+for(let i=0;i<groundPos.count;i++){
+  const x=groundPos.getX(i), y=groundPos.getY(i);
+  const h = Math.sin(x*0.08)*Math.cos(y*0.08)*1.2 + Math.sin(x*0.22+1)*Math.cos(y*0.15+2)*0.5;
+  groundPos.setZ(i, h);
+}
+groundGeo.computeVertexNormals();
 const ground = new THREE.Mesh(
-  new THREE.PlaneGeometry(200,200),
-  new THREE.MeshPhongMaterial({color:0x0d1117})
+  groundGeo,
+  new THREE.MeshStandardMaterial({color:0x0d1117, roughness:0.95, metalness:0.05, envMapIntensity:0.3})
 );
-ground.rotation.x=-Math.PI/2; scene.add(ground);
+ground.rotation.x=-Math.PI/2;
+ground.receiveShadow=true;
+scene.add(ground);
 // Grid
-const grid = new THREE.GridHelper(200,50,0x1a0a3a,0x100820); scene.add(grid);
+const grid = new THREE.GridHelper(200,50,0x1a0a3a,0x0d0820); scene.add(grid);
 
 // Trees / crystals as landmarks
 function crystal(x,z,color,h=3){
   const g=new THREE.Group();
-  const cone=new THREE.Mesh(new THREE.ConeGeometry(0.4,h,6),new THREE.MeshPhongMaterial({color,emissive:color,emissiveIntensity:0.6}));
-  cone.position.y=h/2; g.add(cone);
+  const cone=new THREE.Mesh(new THREE.ConeGeometry(0.4,h,6),new THREE.MeshStandardMaterial({color,emissive:color,emissiveIntensity:0.8,roughness:0.2,metalness:0.6}));
+  cone.position.y=h/2; cone.castShadow=true; g.add(cone);
+  const inner=new THREE.Mesh(new THREE.ConeGeometry(0.18,h*0.7,6),new THREE.MeshStandardMaterial({color:0xffffff,emissive:color,emissiveIntensity:1.5,transparent:true,opacity:0.5}));
+  inner.position.y=h/2; g.add(inner);
+  const pt=new THREE.PointLight(color,1.5,8); pt.position.y=h; g.add(pt);
   g.position.set(x,0,z); scene.add(g);
 }
 [[-15,-15],[-15,15],[15,-15],[15,15],[0,-25],[0,25],[-25,0],[25,0]].forEach(([x,z],i)=>{
@@ -2405,7 +2431,8 @@ const pCape=new THREE.Mesh(new THREE.BoxGeometry(0.78,0.85,0.05),capeMat); pCape
   const hand=new THREE.Mesh(new THREE.SphereGeometry(0.12,8,6),skinMat); hand.position.set(x,0.7,0); playerGrp.add(hand);
 });
 // Glow aura
-const aura=new THREE.PointLight(0x8b5cf6,0.6,4); aura.position.y=1; playerGrp.add(aura);
+const aura=new THREE.PointLight(0x8b5cf6,1.2,6); aura.position.y=1; playerGrp.add(aura);
+playerGrp.traverse(c=>{if(c.isMesh){c.castShadow=true;c.receiveShadow=true;}});
 scene.add(playerGrp);
 
 // ── Wild supers in world ───────────────────────────────────────────────────────
@@ -2977,6 +3004,7 @@ function spawnWildSuper(defIdx, x, z){
   spr.position.y=labelY; spr.scale.set(2.5,0.55,1); grp.add(spr);
 
   grp.position.set(x,0,z);
+  grp.traverse(c=>{if(c.isMesh){c.castShadow=true;c.receiveShadow=true;}});
   scene.add(grp);
   // Rare sparkle effect for rarity 4-5
   if(def.rarity>=4) setTimeout(()=>addRareSparkles(grp, def.rarity), 100);
