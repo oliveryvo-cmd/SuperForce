@@ -7197,11 +7197,14 @@ setInterval(()=>{
 }, 10_000);
 
 // Patch _openWildOrCatch to handle HOPEWARRIOR
-const _origOpenWildOrCatch2 = window._openWildOrCatch;
+// NOTE: window._openWildOrCatch is defined later (line ~9021), so we cannot
+// capture it here. Call openWildChoice / tryCatch directly instead.
 window._openWildOrCatch = function(wildIdx){
   const w = wildSupers[wildIdx];
-  if(w?.isHopewarrior){ tryHopewarriorCatch(wildIdx); return; }
-  _origOpenWildOrCatch2(wildIdx);
+  if(!w) return;
+  if(w.isHopewarrior){ tryHopewarriorCatch(wildIdx); return; }
+  if(team.length===0){ tryCatch(wildIdx); return; }
+  openWildChoice(wildIdx);
 };
 
 // Also patch tryCatch for HOPEWARRIOR (direct catch button)
@@ -8435,8 +8438,8 @@ const ACHIEVEMENT_DEFS = [
   {id:'full_team',    label:'Full Squad',          desc:'Have 6 supers in your team',   icon:'👥', check:()=>team.length>=6},
   {id:'dex50',        label:'Dex Hunter',          desc:'Discover 50% of all supers',   icon:'📖', check:()=>getCaughtDex().size>=Math.floor(SUPER_DEFS.length*0.5)},
   {id:'dex_full',     label:'Completionist',       desc:'Discover ALL supers',          icon:'🌟', check:()=>getCaughtDex().size>=SUPER_DEFS.length},
-  {id:'rank_gold',    label:'Gold Trainer',        desc:'Reach Gold rank',              icon:'🥇', check:()=>(myMMR||1000)>=2000},
-  {id:'rank_diamond', label:'Diamond Trainer',     desc:'Reach Diamond rank',           icon:'💠', check:()=>(myMMR||1000)>=4000},
+  {id:'rank_gold',    label:'Gold Trainer',        desc:'Reach Gold rank',              icon:'🥇', check:()=>(myStats?.rating||1000)>=2000},
+  {id:'rank_diamond', label:'Diamond Trainer',     desc:'Reach Diamond rank',           icon:'💠', check:()=>(myStats?.rating||1000)>=4000},
   {id:'lvl20',        label:'Veteran',             desc:'Reach Trainer Level 20',       icon:'🎖️', check:()=>(trainerLevel||1)>=20},
   {id:'biome_all',    label:'World Traveler',      desc:'Visit all 5 biomes',           icon:'🗺️', check:()=>(JSON.parse(localStorage.getItem('sf_biomes_visited')||'[]')).length>=5},
   {id:'quest10',      label:'Quest Master',        desc:'Complete 10 daily quests',     icon:'📋', check:()=>(parseInt(localStorage.getItem('sf_quests_done')||'0'))>=10},
