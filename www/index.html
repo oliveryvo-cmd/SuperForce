@@ -475,19 +475,61 @@ body{background:#000;overflow:hidden;font-family:'Segoe UI',sans-serif;color:#ff
 }
 .combatant{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:140px;max-width:180px;}
 .combatant-sprite{
-  width:120px;height:120px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;font-size:4rem;
-  border:2px solid currentColor;
-  box-shadow:0 0 30px currentColor,0 0 60px currentColor,inset 0 0 20px rgba(255,255,255,0.05);
-  animation:float 3s ease-in-out infinite;transition:box-shadow 0.4s,border-color 0.4s,opacity 0.8s;
-  background:radial-gradient(circle at 40% 30%, rgba(255,255,255,0.12) 0%, rgba(0,0,0,0.6) 70%);
+  width:140px;height:220px;border-radius:4px;
+  display:flex;align-items:flex-end;justify-content:center;
+  position:relative;overflow:hidden;
+  border:1px solid color-mix(in srgb,currentColor 40%,transparent);
+  background:radial-gradient(ellipse at bottom,rgba(6,4,20,0.9) 20%,rgba(0,0,0,1) 100%) !important;
+  box-shadow:0 0 20px color-mix(in srgb,currentColor 20%,transparent),0 0 60px color-mix(in srgb,currentColor 12%,transparent);
+  animation:float 3s ease-in-out infinite;
+  transition:box-shadow 0.4s,border-color 0.4s,opacity 0.8s;
 }
 .battle-3d-active .combatant-sprite{
   opacity:0.25;
-  font-size:2.5rem;
   box-shadow:0 0 15px currentColor,0 0 30px currentColor;
 }
-.combatant-sprite.hit{animation:hitFlash 0.3s;}
+/* Spinning halo ring */
+.combatant-halo{
+  position:absolute;top:15%;left:50%;
+  width:110px;height:110px;
+  transform:translate(-50%,-10%) rotate(0deg) skewX(-10deg);
+  border:2px dashed color-mix(in srgb,currentColor 30%,transparent);
+  border-radius:50%;z-index:1;
+  animation:haloSpin 12s linear infinite;
+  pointer-events:none;
+}
+@keyframes haloSpin{100%{transform:translate(-50%,-10%) rotate(360deg) skewX(-10deg);}}
+/* Geometric body silhouette */
+.combatant-body{
+  width:100%;height:100%;
+  background:linear-gradient(180deg,rgba(10,10,15,0.95) 0%,rgba(2,2,5,1) 100%);
+  clip-path:polygon(50% 0%,65% 12%,60% 25%,85% 35%,70% 55%,90% 75%,75% 100%,25% 100%,10% 75%,30% 55%,15% 35%,40% 25%,35% 12%);
+  filter:drop-shadow(0 0 12px currentColor);
+  position:relative;z-index:2;
+  animation:humanIdle 3.5s ease-in-out infinite;
+  transform-origin:bottom center;
+}
+@keyframes humanIdle{
+  0%,100%{transform:translateY(0) scaleY(1);}
+  50%{transform:translateY(-4px) scaleY(1.02);}
+}
+/* Icon floats above the body */
+.combatant-icon{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  font-size:3.6rem;z-index:3;
+  filter:drop-shadow(0 0 8px currentColor);
+  animation:float 3s ease-in-out infinite;
+  pointer-events:none;
+}
+/* Recoil hit animation */
+@keyframes realisticHurt{
+  0%{transform:translateX(0) scaleY(1);filter:contrast(2) brightness(3);}
+  15%{transform:translateX(-25px) scaleY(0.9) rotate(-6deg);}
+  100%{transform:translateX(0) scaleY(1);filter:none;}
+}
+.combatant-sprite.hit{animation:realisticHurt 0.45s ease-in-out both !important;}
+/* Legacy hitFlash kept for fallback */
 @keyframes hitFlash{0%,100%{filter:brightness(1)}50%{filter:brightness(3) saturate(0)}}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
 /* Shadow under sprite */
@@ -4619,10 +4661,12 @@ function renderBattleSides(){
   if(!myS||!oppS) return;
   const col=s=>TYPE_COLORS[s.type]||'#aaa';
 
-  document.getElementById('my-sprite').textContent=myS.icon||'❓';
-  document.getElementById('my-sprite').style.color=col(myS);
-  document.getElementById('my-sprite').style.borderColor=col(myS);
-  document.getElementById('my-sprite').style.boxShadow=`0 0 30px ${col(myS)},0 0 60px ${col(myS)},inset 0 0 20px rgba(255,255,255,0.05)`;
+  const buildSpriteHTML=(s)=>`<div class="combatant-halo"></div><div class="combatant-body"></div><div class="combatant-icon">${s.icon||'❓'}</div>`;
+  const myEl=document.getElementById('my-sprite');
+  myEl.innerHTML=buildSpriteHTML(myS);
+  myEl.style.color=col(myS);
+  myEl.style.borderColor=col(myS);
+  myEl.style.boxShadow=`0 0 30px ${col(myS)},0 0 60px ${col(myS)},inset 0 0 20px rgba(255,255,255,0.05)`;
   const STATUS_BADGE={burn:'🔥 BURNED',poison:'☠️ POISONED',stun:'⚡ STUNNED',freeze:'🧊 FROZEN',weaken:'📉 WEAKENED',shield:'🛡️ SHIELDED'};
   const STATUS_COLOR={burn:'#f97316',poison:'#a855f7',stun:'#facc15',freeze:'#7dd3fc',weaken:'#94a3b8',shield:'#4ade80'};
   function statusBadgeHTML(s){if(!s||!s.type)return'';const c=STATUS_COLOR[s.type]||'#aaa';return`<span class="status-badge" style="background:${c}22;color:${c};border:1px solid ${c}55">${STATUS_BADGE[s.type]||s.type.toUpperCase()}</span>`;}
@@ -4632,10 +4676,11 @@ function renderBattleSides(){
   document.getElementById('my-type').style.cssText=`color:${col(myS)};border-color:${col(myS)}44`;
   setHpBar('my',myS.hp,myS.maxHp);
 
-  document.getElementById('opp-sprite').textContent=oppS.icon||'❓';
-  document.getElementById('opp-sprite').style.color=col(oppS);
-  document.getElementById('opp-sprite').style.borderColor=col(oppS);
-  document.getElementById('opp-sprite').style.boxShadow=`0 0 30px ${col(oppS)},0 0 60px ${col(oppS)},inset 0 0 20px rgba(255,255,255,0.05)`;
+  const oppEl=document.getElementById('opp-sprite');
+  oppEl.innerHTML=buildSpriteHTML(oppS);
+  oppEl.style.color=col(oppS);
+  oppEl.style.borderColor=col(oppS);
+  oppEl.style.boxShadow=`0 0 30px ${col(oppS)},0 0 60px ${col(oppS)},inset 0 0 20px rgba(255,255,255,0.05)`;
   document.getElementById('opp-name').innerHTML=oppS.name+statusBadgeHTML(oppS.status);
   document.getElementById('opp-level').textContent=`Lv.${oppS.level}`;
   document.getElementById('opp-type').textContent=oppS.type.toUpperCase();
