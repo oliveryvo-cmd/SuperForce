@@ -1150,7 +1150,7 @@ body{background:#000;overflow:hidden;font-family:'Segoe UI',sans-serif;color:#ff
   const c=document.getElementById('ls-canvas');
   const ctx=c.getContext('2d');
   let stars=[];
-  function resize(){ c.width=innerWidth; c.height=innerHeight; }
+  function resize(){ c.width=window.innerWidth; c.height=window.innerHeight; }
   resize(); window.addEventListener('resize',resize);
   for(let i=0;i<180;i++) stars.push({x:Math.random(),y:Math.random(),r:Math.random()*1.4+0.2,s:Math.random()*0.4+0.1,p:Math.random()*Math.PI*2});
   function draw(){
@@ -2603,14 +2603,14 @@ const TYPE_COLORS = {
 // ── Renderer ──────────────────────────────────────────────────────────────────
 const renderer = new THREE.WebGLRenderer({antialias:true, powerPreference:'high-performance'});
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-renderer.setSize(innerWidth,innerHeight);
+renderer.setSize(window.innerWidth,window.innerHeight);
 renderer.shadowMap.enabled=true;
 renderer.shadowMap.type=THREE.PCFSoftShadowMap;
 renderer.toneMapping=THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure=1.1;
 renderer.domElement.id='game-canvas';
 document.body.appendChild(renderer.domElement);
-window.addEventListener('resize',()=>{renderer.setSize(innerWidth,innerHeight);camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();});
+window.addEventListener('resize',()=>{renderer.setSize(window.innerWidth,window.innerHeight);camera.aspect=window.innerWidth/window.innerHeight;camera.updateProjectionMatrix();});
 
 // ── Scene ─────────────────────────────────────────────────────────────────────
 const scene = new THREE.Scene();
@@ -2723,7 +2723,7 @@ function showWeatherBanner(w){
 let lightningActive=false;
 
 // ── Camera (3rd person) ───────────────────────────────────────────────────────
-const camera = new THREE.PerspectiveCamera(65, innerWidth/innerHeight, 0.1, 120);
+const camera = new THREE.PerspectiveCamera(65, window.innerWidth/window.innerHeight, 0.1, 120);
 let camYaw=0, camPitch=0.35;
 const CAM_DIST=8, CAM_HEIGHT=3;
 
@@ -3366,7 +3366,7 @@ function spawnWildSuper(defIdx, x, z){
   grp.traverse(c=>{if(c.isMesh){c.castShadow=true;c.receiveShadow=true;}});
   scene.add(grp);
   // Rare sparkle effect for rarity 4-5
-  if(def.rarity>=4) setTimeout(()=>addRareSparkles(grp, def.rarity), 100);
+  if(def.rarity>=4 && grp) setTimeout(()=>{ if(grp) addRareSparkles(grp, def.rarity); }, 100);
   wildSupers.push({grp, defIdx, bobPhase:Math.random()*Math.PI*2, roamDir:Math.random()*Math.PI*2, roamT:0});
 }
 
@@ -7391,7 +7391,8 @@ function showCombo(n){
 // 🌟 RARE SUPER SPARKLES
 // ══════════════════════════════════════════════════════════════
 function addRareSparkles(grp, rarity){
-  if(rarity < 4) return;
+  if(!grp || rarity < 4) return;
+  if(!grp.userData) grp.userData = {};
   const count = rarity === 5 ? 6 : 3;
   const color = rarity === 5 ? 0xf59e0b : 0xffffff;
   for(let i=0;i<count;i++){
