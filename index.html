@@ -3692,10 +3692,23 @@ setInterval(()=>{ if(myId) saveGame(); }, 30000);
 
 // ── WebSocket ─────────────────────────────────────────────────────────────────
 function initWS(){
+  // On GitHub Pages (no server), run in offline solo mode
+  if(location.hostname.includes('github.io')||location.protocol==='file:'){
+    notify('Playing offline — solo mode','warn');
+    ws={send:()=>{},close:()=>{}};
+    // Fake open event so game initialises
+    setTimeout(()=>{
+      ws.readyState=1;
+      const fakeOpen=new Event('open');
+      if(ws.onopen) ws.onopen(fakeOpen);
+    },200);
+    return;
+  }
   const proto=location.protocol==='https:'?'wss:':'ws:';
   const port =location.protocol==='https:'?'':':8080';
-  ws=new WebSocket(`${proto}//${location.hostname}${port}`);
-  ws.onerror=()=>notify('Cannot connect to server','bad');
+  try{ ws=new WebSocket(`${proto}//${location.hostname}${port}`); }
+  catch(e){ ws={send:()=>{},close:()=>{},readyState:0}; return; }
+  ws.onerror=()=>notify('Cannot connect to server — solo mode','warn');
 
   ws.onmessage=raw=>{
     const msg=JSON.parse(raw.data);
