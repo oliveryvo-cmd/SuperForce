@@ -10769,7 +10769,7 @@ function getThisWeekVault(){
   const rng  = seededRng(seed);
   const locIdx   = Math.floor(rng() * VAULT_LOCATIONS.length);
   // Pick from rarity 4+ supers
-  const legendaries = SUPERS.map((s,i)=>({s,i})).filter(x=>(x.s.rarity||1)>=4);
+  const legendaries = SUPER_DEFS.map((s,i)=>({s,i})).filter(x=>(x.s.rarity||1)>=4);
   const superIdx = legendaries[Math.floor(rng() * legendaries.length)];
   return { location: VAULT_LOCATIONS[locIdx], superDefIdx: superIdx?.i ?? 0, weekSeed: seed };
 }
@@ -10970,7 +10970,7 @@ window.shopBuyLucky = function(){
   if(getCoins() < 500){ notify('Not enough coins!','bad'); return; }
   addCoins(-500);
   // Spawn a random rarity 3+ super near player
-  const rares = SUPERS.map((s,i)=>({i,s})).filter(x=>x.s.rarity>=3);
+  const rares = SUPER_DEFS.map((s,i)=>({i,s})).filter(x=>x.s.rarity>=3);
   const pick = rares[Math.floor(Math.random()*rares.length)];
   const angle = Math.random()*Math.PI*2;
   spawnWildSuper(pick.i, player.position.x+Math.cos(angle)*8, player.position.z+Math.sin(angle)*8);
@@ -11019,7 +11019,7 @@ const STREAK_REWARDS = [
   { day:4, label:'+200 coins',    fn:()=>addCoins(200) },
   { day:5, label:'+1 Elixir',     fn:()=>{ const inv=getItems(); inv.elixir=(inv.elixir||0)+1; saveItems(inv); } },
   { day:6, label:'+300 coins',    fn:()=>addCoins(300) },
-  { day:7, label:'🌟 500 coins + Rare Spawn!', fn:()=>{ addCoins(500); setTimeout(()=>shopBuyLucky&&(getCoins()>=0)&&spawnWildSuper(SUPERS.map((s,i)=>({i,r:s.rarity})).filter(x=>x.r>=4).sort(()=>Math.random()-0.5)[0]?.i||0, player?.position?.x||0, player?.position?.z||5), 2000); } },
+  { day:7, label:'🌟 500 coins + Rare Spawn!', fn:()=>{ addCoins(500); setTimeout(()=>shopBuyLucky&&(getCoins()>=0)&&spawnWildSuper(SUPER_DEFS.map((s,i)=>({i,r:s.rarity})).filter(x=>x.r>=4).sort(()=>Math.random()-0.5)[0]?.i||0, player?.position?.x||0, player?.position?.z||5), 2000); } },
 ];
 
 function getStreakData(){
@@ -11083,11 +11083,11 @@ const BPASS_MILESTONES = {
   5:  { label:'+200 Coins',        fn:()=>addCoins(200) },
   10: { label:'+1 Elixir',         fn:()=>{ const inv=getItems(); inv.elixir=(inv.elixir||0)+1; saveItems(inv); } },
   15: { label:'+500 Coins',        fn:()=>addCoins(500) },
-  20: { label:'Lucky Encounter',   fn:()=>{ const rares=SUPERS.map((s,i)=>({i,s})).filter(x=>x.s.rarity>=4); const p=rares[Math.floor(Math.random()*rares.length)]; spawnWildSuper(p.i, player.position.x+5, player.position.z+5); } },
+  20: { label:'Lucky Encounter',   fn:()=>{ const rares=SUPER_DEFS.map((s,i)=>({i,s})).filter(x=>x.s.rarity>=4); const p=rares[Math.floor(Math.random()*rares.length)]; spawnWildSuper(p.i, player.position.x+5, player.position.z+5); } },
   25: { label:'+1000 Coins',       fn:()=>addCoins(1000) },
   30: { label:'+2 Elixir',         fn:()=>{ const inv=getItems(); inv.elixir=(inv.elixir||0)+2; saveItems(inv); } },
   40: { label:'+2000 Coins',       fn:()=>addCoins(2000) },
-  50: { label:'🌟 LEGENDARY SPAWN',fn:()=>{ const leg=SUPERS.map((s,i)=>({i,s})).filter(x=>x.s.rarity>=5); if(leg.length){ const p=leg[Math.floor(Math.random()*leg.length)]; spawnWildSuper(p.i, player.position.x+6, player.position.z+6); } } },
+  50: { label:'🌟 LEGENDARY SPAWN',fn:()=>{ const leg=SUPER_DEFS.map((s,i)=>({i,s})).filter(x=>x.s.rarity>=5); if(leg.length){ const p=leg[Math.floor(Math.random()*leg.length)]; spawnWildSuper(p.i, player.position.x+6, player.position.z+6); } } },
 };
 
 function getBPassData(){

@@ -1,4 +1,4 @@
-const CACHE = 'superforce-v18';
+const CACHE = 'superforce-v19';
 const ASSETS = ['/', '/index.html', '/three.min.js', '/manifest.json', '/icon-192.png', '/icon-512.png'];
 
 self.addEventListener('install', e => {
