@@ -2046,10 +2046,18 @@ const SUPER_DEFS = [
     name:'CHAOS LIGHTNING', type:'energy', icon:'🌩️', color:'#c4b5fd',
     hp:105, attack:130, defense:60, speed:115, rarity:5,
     moves:[
-      {name:'CHAOS BOLT',     power:70,  accuracy:100, type:'energy', effect:'stun',  effectChance:20},
-      {name:'STORM SURGE',    power:110, accuracy:85,  type:'energy', effect:'stun',  effectChance:35},
-      {name:'THUNDER ARMOR',  power:30,  accuracy:100, type:'defense',effect:'shield',effectChance:100},
-      {name:'LIGHTNING CHAIN',power:90,  accuracy:90,  type:'energy', effect:'stun',  effectChance:25},
+      {name:'Volt Lunge',     power:40,  accuracy:100, type:'energy',  effect:'speed-up', effectChance:100,
+       color:'#00d4ff', animation:'lunge-forward',
+       logText:'lunges forward clad in blinding blue electricity!'},
+      {name:'Thunderstorm',   power:90,  accuracy:75,  type:'energy',  effect:'stun',     effectChance:45,
+       color:'#f59e0b', animation:'big-shake',
+       logText:'summons a devastating vortex of orange chaotic lightning!'},
+      {name:'Overdrive Aura', power:0,   accuracy:100, type:'defense', effect:'shield',   effectChance:100,
+       color:'#8b5cf6', animation:'status-stun',
+       logText:'flares their aura to maximum output, hardening their defenses!'},
+      {name:'Plasma Burst',   power:65,  accuracy:95,  type:'energy',  effect:'burn',     effectChance:30,
+       color:'#ec4899', animation:'lunge-forward',
+       logText:'unleashes a concentrated beam of superheated plasma!'},
     ]
   },
   // ── 3D MODEL HEROES ──────────────────────────────────────────────────────────
@@ -7572,6 +7580,44 @@ function startWildBattle(wildIdx){
   renderBattleActions();
 }
 
+// ── Chaos Lightning move animation helper ─────────────────────────────────────
+function applyMoveAnimation(spriteId, animClass, durationMs){
+  const el = document.getElementById(spriteId);
+  if(!el || !animClass) return;
+  // Strip all known anim classes first so re-trigger works
+  const ALL_ANIMS = ['lunge-forward','lunge-back','big-shake','shake',
+                     'status-stun','status-burn','status-freeze','status-poison'];
+  ALL_ANIMS.forEach(c => el.classList.remove(c));
+  void el.offsetWidth; // force reflow so animation restarts
+  el.classList.add(animClass);
+  setTimeout(() => ALL_ANIMS.forEach(c => el.classList.remove(c)), durationMs||600);
+}
+
+// ── Log helper that picks the right CSS class from move data ─────────────────
+function getMoveLogClass(move, isKo){
+  if(isKo) return 'ko';
+  if(!move) return '';
+  if(move.power === 0) return 'shield-log';         // status / buff move
+  if((move.effect==='burn'))    return 'burn-log';
+  if((move.effect==='poison'))  return 'poison-log';
+  if((move.effect==='stun'))    return 'stun-log';
+  if((move.effect==='freeze'))  return 'freeze-log';
+  if(move.power >= 80)          return 'super';      // heavy hitters glow gold
+  return '';
+}
+
+// ── Smooth HP bar reducer ─────────────────────────────────────────────────────
+function setHpBar(barId, currentHp, maxHp){
+  const bar = document.getElementById(barId);
+  if(!bar) return;
+  const pct = Math.max(0, Math.min(100, (currentHp / maxHp) * 100));
+  bar.style.width = pct + '%';
+  // Color shifts: green → yellow → red
+  if(pct > 50)      bar.style.background = 'linear-gradient(90deg,#4ade80,#22d3ee)';
+  else if(pct > 25) bar.style.background = 'linear-gradient(90deg,#f59e0b,#f97316)';
+  else              bar.style.background = 'linear-gradient(90deg,#ef4444,#dc2626)';
+}
+
 function processWildBattleMove(moveIdx){
   if(!wildBattleActive || !isMyTurn) return;
   const myS  = wildBattleMySuper;
@@ -7581,81 +7627,145 @@ function processWildBattleMove(moveIdx){
 
   isMyTurn = false;
 
-  // My attack
+  // ── Player's turn ──────────────────────────────────────────────────────────
   const missed = Math.random()*100 > (move.accuracy??100);
   if(missed){
-    addLog(`${myS.name} used ${move.name}... but missed!`);
+    addLog(`${myS.name} used ${move.name}... but missed!`, 'miss');
   } else {
-    const atkMult = myS.status?.type==='weaken'?0.75:1;
-    const defMult = oppS.status?.type==='shield'?0.6:1;
-    const atk = myS.attack||50, def = oppS.defense||50, pwr = move.power||80;
-    const raw = Math.max(1, Math.round((atk/def)*pwr*0.18*atkMult*defMult));
-    oppS.hp = Math.max(0, oppS.hp - raw);
-    const isBig = false;
-    fireProjectile('my', move.type||'default', ()=>{
-      flashHit('opp', raw, move.type||'default', isBig);
-    });
-    addLog(`${myS.name} used ${move.name}! (${raw} dmg)`);
-    if(move.effect && Math.random()*100<(move.effectChance||20) && !oppS.status){
-      oppS.status={type:move.effect,turns:3};
-      addLog(`${oppS.name} is now ${move.effect}!`);
+    // Status-only move (power === 0)
+    if(move.power === 0){
+      applyMoveAnimation('my-sprite', move.animation, 800);
+      const logMsg = move.logText
+        ? `${myS.name} ${move.logText}`
+        : `${myS.name} used ${move.name}!`;
+      addLog(logMsg, getMoveLogClass(move, false));
+      if(move.effect && !myS.status){
+        myS.status = {type: move.effect, turns: 3};
+        addLog(`${myS.name}'s ${move.effect} activated!`, 'shield-log');
+        updateStatusAura('my', myS.status);
+      }
+    } else {
+      // Damage move
+      const atkMult = myS.status?.type==='weaken' ? 0.75 : 1;
+      const defMult = oppS.status?.type==='shield' ? 0.6  : 1;
+      const atk = myS.attack||50, def = oppS.defense||50, pwr = move.power||80;
+      const raw = Math.max(1, Math.round((atk/def)*pwr*0.18*atkMult*defMult));
+      oppS.hp = Math.max(0, oppS.hp - raw);
+
+      // Animation on attacker
+      applyMoveAnimation('my-sprite', move.animation || 'lunge-forward', 700);
+
+      // Projectile → flash hit on opponent
+      fireProjectile('my', move.type||'energy', ()=>{
+        flashHit('opp', raw, move.type||'energy', move.power >= 80);
+      });
+
+      // Battle log with custom logText
+      const logMsg = move.logText
+        ? `${myS.name} ${move.logText} (${raw} dmg)`
+        : `${myS.name} used ${move.name}! (${raw} dmg)`;
+      addLog(logMsg, getMoveLogClass(move, false));
+
+      // Effect proc
+      if(move.effect && move.effect !== 'speed-up' &&
+         Math.random()*100 < (move.effectChance||20) && !oppS.status){
+        oppS.status = {type: move.effect, turns: 3};
+        const effMap = {burn:'burn-log',poison:'poison-log',stun:'stun-log',freeze:'freeze-log'};
+        addLog(`${oppS.name} is now ${move.effect}ed!`, effMap[move.effect]||'');
+      }
+
+      // Smooth HP bar
+      setHpBar('opp-hp-bar', oppS.hp, oppS.maxHp);
     }
   }
 
-  // Sync UI
+  // Full UI sync
   myBattleSuper  = {...myS};
   oppBattleSuper = {...oppS};
   renderBattleSides();
   updateStatusAura('opp', oppS.status);
+  // Re-apply smooth bar after renderBattleSides resets it
+  setHpBar('opp-hp-bar', oppS.hp, oppS.maxHp);
 
-  if(oppS.hp<=0){
-    // Win!
-    setTimeout(()=>endWildBattle('win'), 400);
+  if(oppS.hp <= 0){
+    addLog(`${oppS.name} has been knocked out!`, 'ko');
+    setTimeout(()=>endWildBattle('win'), 500);
     return;
   }
 
-  // Wild's turn after short delay
+  // ── Opponent counter-attack after delay ────────────────────────────────────
   setTimeout(()=>{
-    // Status tick on wild
+    // Status tick on wild opponent
     if(oppS.status){
-      if(oppS.status.type==='burn'||oppS.status.type==='poison'){
-        const dmg=Math.max(1,Math.round(oppS.maxHp*0.08));
-        oppS.hp=Math.max(0,oppS.hp-dmg);
-        addLog(`${oppS.name} took ${dmg} ${oppS.status.type} damage!`);
-        if(oppS.hp<=0){ setTimeout(()=>endWildBattle('win'),400); return; }
+      if(oppS.status.type==='burn' || oppS.status.type==='poison'){
+        const dmg = Math.max(1, Math.round(oppS.maxHp*0.08));
+        oppS.hp = Math.max(0, oppS.hp - dmg);
+        const tickCls = oppS.status.type==='burn' ? 'burn-log' : 'poison-log';
+        addLog(`${oppS.name} took ${dmg} ${oppS.status.type} damage!`, tickCls);
+        setHpBar('opp-hp-bar', oppS.hp, oppS.maxHp);
+        if(oppS.hp <= 0){
+          addLog(`${oppS.name} was knocked out by ${oppS.status.type}!`, 'ko');
+          setTimeout(()=>endWildBattle('win'), 400);
+          return;
+        }
       }
+      oppS.status.turns--;
+      if(oppS.status.turns <= 0) oppS.status = null;
     }
 
     // Wild picks random move
     const wildMove = oppS.moves[Math.floor(Math.random()*oppS.moves.length)];
-    const wMissed = Math.random()*100>(wildMove.accuracy??100);
+    const wMissed  = Math.random()*100 > (wildMove.accuracy??100);
     if(wMissed){
-      addLog(`Wild ${oppS.name} used ${wildMove.name}... but missed!`);
+      addLog(`Wild ${oppS.name} used ${wildMove.name}... but missed!`, 'miss');
     } else {
-      const atk2=oppS.attack||50, def2=myS.defense||50, pwr2=wildMove.power||80;
-      const raw2 = Math.max(1, Math.round((atk2/def2)*pwr2*0.18));
-      myS.hp = Math.max(0, myS.hp - raw2);
-      // Sync to team
-      team[wildBattleMyIdx].hp = myS.hp;
-      fireProjectile('opp', wildMove.type||'default', ()=>{
-        flashHit('my', raw2, wildMove.type||'default', false);
-      });
-      addLog(`Wild ${oppS.name} used ${wildMove.name}! (${raw2} dmg)`);
+      if(wildMove.power === 0){
+        applyMoveAnimation('opp-sprite', wildMove.animation, 800);
+        const wLogMsg = wildMove.logText
+          ? `${oppS.name} ${wildMove.logText}`
+          : `${oppS.name} used ${wildMove.name}!`;
+        addLog(wLogMsg, getMoveLogClass(wildMove, false));
+        if(wildMove.effect && !oppS.status){
+          oppS.status = {type: wildMove.effect, turns: 3};
+        }
+      } else {
+        const atk2 = oppS.attack||50, def2 = myS.defense||50, pwr2 = wildMove.power||80;
+        const raw2  = Math.max(1, Math.round((atk2/def2)*pwr2*0.18));
+        myS.hp = Math.max(0, myS.hp - raw2);
+        team[wildBattleMyIdx].hp = myS.hp;
+
+        applyMoveAnimation('opp-sprite', wildMove.animation || 'lunge-back', 700);
+
+        fireProjectile('opp', wildMove.type||'energy', ()=>{
+          flashHit('my', raw2, wildMove.type||'energy', wildMove.power >= 80);
+        });
+
+        const wLogMsg = wildMove.logText
+          ? `Wild ${oppS.name} ${wildMove.logText} (${raw2} dmg)`
+          : `Wild ${oppS.name} used ${wildMove.name}! (${raw2} dmg)`;
+        addLog(wLogMsg, getMoveLogClass(wildMove, false));
+
+        setHpBar('my-hp-bar', myS.hp, myS.maxHp);
+      }
     }
 
     myBattleSuper  = {...myS};
     oppBattleSuper = {...oppS};
     renderBattleSides();
     updateStatusAura('my', myS.status);
+    // Re-apply smooth bars after renderBattleSides
+    setHpBar('my-hp-bar',  myS.hp,  myS.maxHp);
+    setHpBar('opp-hp-bar', oppS.hp, oppS.maxHp);
 
-    if(myS.hp<=0){
-      setTimeout(()=>endWildBattle('lose'),400);
+    if(myS.hp <= 0){
+      addLog(`${myS.name} has been knocked out!`, 'ko');
+      setTimeout(()=>endWildBattle('lose'), 500);
       return;
     }
 
     isMyTurn = true;
     renderBattleActions();
-  }, 900);
+  }, 1100);
 }
 
 function endWildBattle(result){
