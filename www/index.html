@@ -1093,6 +1093,52 @@ body{background:#000;overflow:hidden;font-family:'Segoe UI',sans-serif;color:#ff
 #weather-hud .w-icon{font-size:1.1rem;display:block;text-align:center;margin-bottom:2px;}
 #weather-hud .w-boost{font-size:0.5rem;color:#f59e0b;letter-spacing:1px;}
 
+/* ── ULTRA EVOLUTION ── */
+#ultra-evo-overlay{
+  position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;
+  background:radial-gradient(ellipse at center,#0a0020 0%,#000 100%);
+  flex-direction:column;gap:0;overflow:hidden;
+}
+#ultra-evo-overlay.active{ display:flex; }
+#ue-rings{position:absolute;inset:0;pointer-events:none;}
+.ue-ring{
+  position:absolute;top:50%;left:50%;border-radius:50%;border:2px solid #a78bfa;
+  transform:translate(-50%,-50%) scale(0);opacity:0;
+}
+#ue-flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;}
+#ue-before{font-size:5rem;position:absolute;transition:all 0.6s ease;}
+#ue-after{font-size:7rem;position:absolute;opacity:0;transform:scale(0.3);transition:all 0.7s cubic-bezier(.22,1,.36,1);}
+#ue-name{font-size:1.2rem;font-weight:900;letter-spacing:6px;color:#a78bfa;margin-top:140px;opacity:0;transform:translateY(20px);transition:all 0.5s ease;text-shadow:0 0 40px #a78bfa,0 0 80px #7c3aed;}
+#ue-sub{font-size:0.6rem;letter-spacing:4px;color:#f59e0b;margin-top:8px;opacity:0;transition:all 0.5s ease 0.2s;}
+#ue-power-badge{font-size:0.55rem;letter-spacing:3px;color:#000;background:linear-gradient(90deg,#f59e0b,#fbbf24);padding:6px 16px;border-radius:20px;margin-top:10px;opacity:0;transform:scale(0);transition:all 0.4s ease 0.4s;font-weight:900;}
+@keyframes ueRingExpand{
+  0%{transform:translate(-50%,-50%) scale(0);opacity:0.8;}
+  100%{transform:translate(-50%,-50%) scale(4);opacity:0;}
+}
+@keyframes ueAuraGlow{
+  0%,100%{filter:drop-shadow(0 0 20px #a78bfa) drop-shadow(0 0 40px #7c3aed);}
+  50%{filter:drop-shadow(0 0 40px #f59e0b) drop-shadow(0 0 80px #a78bfa);}
+}
+.ultra-evolved-sprite{
+  animation:ueAuraGlow 1.5s ease-in-out infinite!important;
+  filter:drop-shadow(0 0 20px #a78bfa)!important;
+  border-color:#a78bfa!important;
+  box-shadow:0 0 40px #a78bfa,0 0 80px #7c3aed44,inset 0 0 30px rgba(167,139,250,0.15)!important;
+}
+#ultra-evo-btn{
+  display:none;width:100%;padding:14px;
+  background:linear-gradient(135deg,#1a0a2e,#4c1d95,#7c3aed);
+  border:2px solid #a78bfa;border-radius:10px;cursor:pointer;
+  color:#fff;font-size:0.75rem;font-weight:900;letter-spacing:4px;
+  animation:ueBtnPulse 1s ease-in-out infinite;
+  text-shadow:0 0 10px #a78bfa;
+  box-shadow:0 0 20px #7c3aed88;
+}
+@keyframes ueBtnPulse{
+  0%,100%{box-shadow:0 0 20px #7c3aed88;border-color:#a78bfa;}
+  50%{box-shadow:0 0 40px #a78bfa,0 0 60px #7c3aed;border-color:#fff;}
+}
+
 /* ── ULTRA MOVE ── */
 #ultra-bar-wrap{
   position:absolute;bottom:-8px;left:0;right:0;height:4px;
@@ -2111,6 +2157,7 @@ body{background:#000;overflow:hidden;font-family:'Segoe UI',sans-serif;color:#ff
       <span id="ultra-pct" style="font-size:0.5rem;color:#555;letter-spacing:1px;min-width:28px">0%</span>
     </div>
     <div id="attack-grid"></div>
+    <button id="ultra-evo-btn" onclick="triggerUltraEvolution()">⚗️ ULTRA EVOLUTION</button>
     <div style="display:flex;gap:6px;margin-top:6px;">
       <button id="ultra-move-btn" onclick="fireUltraMove()" style="display:none;flex:1;padding:14px;border-radius:8px;border:2px solid #f59e0b;background:linear-gradient(135deg,rgba(245,158,11,0.15),rgba(239,68,68,0.1));cursor:pointer;text-align:center;color:#f59e0b;font-size:0.85rem;font-weight:900;letter-spacing:4px;">⚡ ULTRA MOVE</button>
       <button id="switch-super-btn" onclick="openSwitchPanel()" style="padding:10px 14px;border-radius:8px;border:1px solid #3b82f644;background:rgba(59,130,246,0.08);cursor:pointer;color:#3b82f6;font-size:0.7rem;letter-spacing:2px;white-space:nowrap;">🔄 SWITCH</button>
@@ -5067,6 +5114,13 @@ function renderBattleActions(){
     shield: {icon:'🛡️',label:'SHIELD', color:'#4ade80'},
   };
 
+  // Ultra Evolution button — shown when HP ≤ 30% and not yet used this battle
+  const ueBtn = document.getElementById('ultra-evo-btn');
+  if(ueBtn){
+    const hpPct = myBattleSuper ? (myBattleSuper.hp / myBattleSuper.maxHp) : 1;
+    ueBtn.style.display = (isMyTurn && myBattleSuper && hpPct <= 0.30 && !myBattleSuper._ultraEvolved) ? 'block' : 'none';
+  }
+
   if(isMyTurn && myBattleSuper){
     // Show if MY super is stunned/frozen this turn
     const myStatus=myBattleSuper.status;
@@ -5869,6 +5923,9 @@ function updateBattle(msg){
 
 function endBattle(msg){
   inBattle=false; currentBattleId=null;
+  if(myBattleSuper) delete myBattleSuper._ultraEvolved;
+  const mySprite=document.getElementById('my-sprite');
+  if(mySprite) mySprite.classList.remove('ultra-evolved-sprite');
   disposeBattle3D();
   cleanupWorldBattle();
   document.getElementById('wb-hud').style.display='none';
@@ -7780,6 +7837,123 @@ window.tryCatch = function(wildIdx){
 };
 
 // ══════════════════════════════════════════════════════════════
+// ⚗️ ULTRA EVOLUTION
+// ══════════════════════════════════════════════════════════════
+function triggerUltraEvolution(){
+  if(!myBattleSuper || myBattleSuper._ultraEvolved) return;
+  if(myBattleSuper.hp / myBattleSuper.maxHp > 0.30){ notify('Ultra Evolution triggers at 30% HP or below!','bad'); return; }
+
+  myBattleSuper._ultraEvolved = true;
+  document.getElementById('ultra-evo-btn').style.display = 'none';
+
+  const overlay = document.getElementById('ultra-evo-overlay');
+  const beforeEl = document.getElementById('ue-before');
+  const afterEl  = document.getElementById('ue-after');
+  const nameEl   = document.getElementById('ue-name');
+  const subEl    = document.getElementById('ue-sub');
+  const badge    = document.getElementById('ue-power-badge');
+  const flash    = document.getElementById('ue-flash');
+
+  const ultraName = 'ULTRA ' + (myBattleSuper.nickname || myBattleSuper.name).toUpperCase();
+  const col = TYPE_COLORS[myBattleSuper.type] || '#a78bfa';
+
+  // Reset state
+  beforeEl.textContent = myBattleSuper.icon || '⚡';
+  beforeEl.style.cssText = 'font-size:5rem;position:absolute;opacity:1;transform:scale(1) translateY(0);';
+  afterEl.style.cssText  = 'font-size:7rem;position:absolute;opacity:0;transform:scale(0.3);';
+  nameEl.style.cssText   = 'font-size:1.2rem;font-weight:900;letter-spacing:6px;color:#a78bfa;margin-top:140px;opacity:0;transform:translateY(20px);transition:all 0.5s ease;text-shadow:0 0 40px #a78bfa,0 0 80px #7c3aed;';
+  subEl.style.opacity    = '0';
+  badge.style.cssText    = 'font-size:0.55rem;letter-spacing:3px;color:#000;background:linear-gradient(90deg,#f59e0b,#fbbf24);padding:6px 16px;border-radius:20px;margin-top:10px;opacity:0;transform:scale(0);transition:all 0.4s ease 0.4s;font-weight:900;';
+  nameEl.textContent = ultraName;
+  afterEl.textContent = myBattleSuper.icon || '⚡';
+
+  // Tint rings to super's color
+  document.querySelectorAll('.ue-ring').forEach((r,i)=>{
+    r.style.borderColor = i===1 ? col : (i===0 ? '#a78bfa' : col+'44');
+    r.style.animation = 'none';
+  });
+
+  overlay.classList.add('active');
+  SFX.hit('energy');
+
+  // Phase 1 (0.3s): existing sprite shakes and shrinks
+  setTimeout(()=>{
+    beforeEl.style.transition = 'all 0.5s ease';
+    beforeEl.style.transform  = 'scale(1.4) translateY(-10px)';
+  }, 300);
+
+  // Phase 2 (0.8s): white flash + rings explode outward
+  setTimeout(()=>{
+    flash.style.transition = 'opacity 0.15s';
+    flash.style.opacity = '1';
+    SFX.hit('psychic');
+    ['ue-ring1','ue-ring2','ue-ring3'].forEach((id,i)=>{
+      const r = document.getElementById(id);
+      r.style.animation = `ueRingExpand ${0.8+i*0.15}s ease-out forwards`;
+      r.style.animationDelay = i*0.08+'s';
+    });
+  }, 800);
+
+  // Phase 3 (1.0s): flash fades, old icon vanishes, new bigger icon appears
+  setTimeout(()=>{
+    flash.style.opacity = '0';
+    beforeEl.style.opacity = '0';
+    beforeEl.style.transform = 'scale(2) translateY(-30px)';
+    afterEl.style.transition = 'all 0.7s cubic-bezier(.22,1,.36,1)';
+    afterEl.style.opacity    = '1';
+    afterEl.style.transform  = 'scale(1)';
+    afterEl.style.filter     = `drop-shadow(0 0 30px ${col}) drop-shadow(0 0 60px #a78bfa)`;
+    SFX.levelup();
+  }, 1000);
+
+  // Phase 4 (1.6s): name + sub fade in
+  setTimeout(()=>{
+    nameEl.style.opacity   = '1';
+    nameEl.style.transform = 'translateY(0)';
+    nameEl.style.color     = col;
+    nameEl.style.textShadow = `0 0 40px ${col},0 0 80px ${col}66`;
+    subEl.style.transition = 'opacity 0.5s ease 0.2s';
+    subEl.style.opacity    = '1';
+    badge.style.opacity    = '1';
+    badge.style.transform  = 'scale(1)';
+  }, 1600);
+
+  // Phase 5 (2.8s): apply stat boosts + visual to actual battle sprite
+  setTimeout(()=>{
+    // Boost all stats 50%
+    myBattleSuper.attack  = Math.round(myBattleSuper.attack  * 1.5);
+    myBattleSuper.defense = Math.round(myBattleSuper.defense * 1.5);
+    myBattleSuper.speed   = Math.round(myBattleSuper.speed   * 1.5);
+    myBattleSuper.maxHp   = Math.round(myBattleSuper.maxHp   * 1.3);
+    myBattleSuper.hp      = Math.min(myBattleSuper.hp + Math.round(myBattleSuper.maxHp * 0.2), myBattleSuper.maxHp);
+    myBattleSuper.name    = ultraName;
+
+    // Apply visual to sprite
+    const sprite = document.getElementById('my-sprite');
+    if(sprite){
+      sprite.classList.add('ultra-evolved-sprite');
+      sprite.style.borderColor  = col;
+      sprite.style.transform    = 'scale(1.15)';
+    }
+    const nameDisp = document.getElementById('my-name');
+    if(nameDisp) nameDisp.textContent = ultraName;
+
+    renderBattleSides();
+    setHpBar('my', myBattleSuper.hp, myBattleSuper.maxHp);
+    addLog(`⚗️ ${ultraName} — ULTRA EVOLUTION! All stats surged!`, 'super');
+    notify(`⚗️ ULTRA EVOLUTION! ${ultraName} awakened!`, 'good');
+    gainBPassXP(150);
+    progressQuest('ultra1', 1);
+  }, 2800);
+
+  // Phase 6 (3.5s): close overlay
+  setTimeout(()=>{
+    overlay.classList.remove('active');
+    // Reset rings animation so they can fire again next time
+    document.querySelectorAll('.ue-ring').forEach(r=>{ r.style.animation='none'; });
+  }, 3500);
+}
+
 // ⚡ ULTRA MOVES
 // ══════════════════════════════════════════════════════════════
 let ultraCharge = 0; // 0-100
@@ -8307,6 +8481,9 @@ function endWildBattle(result){
   wildBattleActive = false;
   inBattle = false;
   currentBattleId = null;
+  if(myBattleSuper) delete myBattleSuper._ultraEvolved;
+  const mySprite=document.getElementById('my-sprite');
+  if(mySprite) mySprite.classList.remove('ultra-evolved-sprite');
   disposeBattle3D();
 
   showBattleResult(result==='win');
@@ -8425,6 +8602,9 @@ const QUEST_DEFS = [
   {id:'shiny1',    label:'Find a shiny super',          target:1,  reward:800, icon:'⭐'},
   {id:'pvp3',      label:'Win 3 PvP battles',           target:3,  reward:250, icon:'🏆'},
   {id:'levelup1',  label:'Level up a super',            target:1,  reward:100, icon:'⬆️'},
+  {id:'ultra1',    label:'Trigger Ultra Evolution',     target:1,  reward:400, icon:'⚗️'},
+  {id:'fuse1',     label:'Fuse two supers',             target:1,  reward:350, icon:'⚗️'},
+  {id:'login1',    label:'Log in today',                target:1,  reward:30,  icon:'📅'},
 ];
 
 function getDailyQuests(){
@@ -10096,6 +10276,21 @@ if(startHint) startHint.innerHTML += '<br>H · Base &nbsp;|&nbsp; 🏆 RANKS but
     </div>
     <div id="achievements-list"></div>
   </div>
+</div>
+
+<!-- ══ ULTRA EVOLUTION CINEMATIC ══ -->
+<div id="ultra-evo-overlay">
+  <div id="ue-flash"></div>
+  <div id="ue-rings">
+    <div class="ue-ring" id="ue-ring1" style="width:200px;height:200px;"></div>
+    <div class="ue-ring" id="ue-ring2" style="width:350px;height:350px;border-color:#f59e0b;"></div>
+    <div class="ue-ring" id="ue-ring3" style="width:500px;height:500px;border-color:#7c3aed44;"></div>
+  </div>
+  <div id="ue-before"></div>
+  <div id="ue-after"></div>
+  <div id="ue-name">ULTRA EVOLUTION</div>
+  <div id="ue-sub">POWER UNLEASHED</div>
+  <div id="ue-power-badge">⚡ ALL STATS +50%</div>
 </div>
 
 <!-- ══ TRADE POPUP ══ -->
