@@ -1032,6 +1032,42 @@ body{background:#000;overflow:hidden;font-family:'Segoe UI',sans-serif;color:#ff
 @keyframes shinySparkle{0%,100%{filter:drop-shadow(0 0 8px #f59e0b)}50%{filter:drop-shadow(0 0 20px #f59e0b) brightness(1.3)}}
 .shiny-icon{animation:shinySparkle 1.5s ease-in-out infinite;}
 
+/* ── COIN SHOP ── */
+#shop-panel{position:fixed;inset:0;background:rgba(0,0,6,0.97);z-index:96;display:none;flex-direction:column;align-items:center;overflow-y:auto;padding:20px;}
+.shop-item{background:rgba(255,255,255,0.03);border:1px solid #1a1a3a;border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:all 0.2s;margin-bottom:8px;}
+.shop-item:hover{border-color:#f59e0b55;background:rgba(245,158,11,0.06);}
+.shop-item-icon{font-size:1.8rem;flex-shrink:0;}
+.shop-item-info{flex:1;}
+.shop-item-name{font-size:0.65rem;font-weight:900;letter-spacing:2px;color:#eee;}
+.shop-item-desc{font-size:0.5rem;color:#666;margin-top:2px;}
+.shop-item-cost{font-size:0.65rem;font-weight:700;color:#f59e0b;white-space:nowrap;}
+
+/* ── LOGIN STREAK ── */
+#streak-banner{position:fixed;top:0;left:0;right:0;z-index:200;background:linear-gradient(90deg,#b45309,#f59e0b,#b45309);color:#000;text-align:center;font-size:0.6rem;font-weight:900;letter-spacing:3px;padding:8px;display:none;animation:slideDown 0.4s ease;}
+@keyframes slideDown{from{transform:translateY(-100%)}to{transform:translateY(0)}}
+.streak-day{width:36px;height:36px;border-radius:50%;border:2px solid #333;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:0.45rem;transition:all 0.3s;}
+.streak-day.claimed{border-color:#f59e0b;background:#f59e0b22;color:#f59e0b;}
+.streak-day.today{border-color:#fbbf24;background:linear-gradient(135deg,#f59e0b,#fbbf24);color:#000;box-shadow:0 0 12px #f59e0b;}
+
+/* ── BATTLE PASS ── */
+#bpass-bar{position:fixed;bottom:0;left:0;right:0;height:28px;background:rgba(0,0,0,0.85);border-top:1px solid #1a1a2a;z-index:40;display:flex;align-items:center;padding:0 10px;gap:8px;pointer-events:none;}
+#bpass-label{font-size:0.45rem;letter-spacing:2px;color:#8b5cf6;white-space:nowrap;font-weight:700;}
+#bpass-track{flex:1;height:8px;background:#111;border-radius:4px;overflow:hidden;position:relative;}
+#bpass-fill{height:100%;background:linear-gradient(90deg,#7c3aed,#a78bfa);border-radius:4px;transition:width 0.6s cubic-bezier(.22,1,.36,1);}
+#bpass-lvl{font-size:0.5rem;color:#a78bfa;font-weight:900;letter-spacing:1px;white-space:nowrap;}
+#bpass-next{font-size:0.4rem;color:#555;white-space:nowrap;}
+#bpass-milestone{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#1a0a2e,#2d1b69);border:2px solid #7c3aed;border-radius:12px;padding:14px 24px;text-align:center;z-index:201;display:none;min-width:220px;}
+
+/* ── SUPER FUSION ── */
+#fusion-panel{position:fixed;inset:0;background:rgba(0,0,6,0.97);z-index:96;display:none;flex-direction:column;align-items:center;justify-content:flex-start;overflow-y:auto;padding:20px;}
+.fusion-slot{width:90px;height:90px;border:2px dashed #333;border-radius:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:2.5rem;background:rgba(255,255,255,0.02);transition:all 0.2s;}
+.fusion-slot.filled{border-color:#a78bfa;background:rgba(167,139,250,0.1);}
+.fusion-slot:hover{border-color:#555;}
+
+/* ── TYPE EFFECTIVENESS BADGE ── */
+.effectiveness-pop{position:absolute;top:-40px;left:50%;transform:translateX(-50%);font-size:0.65rem;font-weight:900;letter-spacing:2px;padding:4px 10px;border-radius:6px;animation:effPop 1.2s ease forwards;pointer-events:none;z-index:10;white-space:nowrap;}
+@keyframes effPop{0%{opacity:0;transform:translateX(-50%) scale(0.6) translateY(0)}20%{opacity:1;transform:translateX(-50%) scale(1.1) translateY(-5px)}80%{opacity:1;transform:translateX(-50%) scale(1) translateY(-10px)}100%{opacity:0;transform:translateX(-50%) scale(0.9) translateY(-18px)}}
+
 /* ── TRAINER CUSTOMIZATION ── */
 .color-pick-row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:10px 0;}
 .color-swatch{width:32px;height:32px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:all 0.15s;flex-shrink:0;}
@@ -1585,6 +1621,8 @@ body{background:#000;overflow:hidden;font-family:'Segoe UI',sans-serif;color:#ff
   <button onclick="openBox()" style="position:absolute;top:230px;left:10px;pointer-events:all;background:rgba(0,0,0,0.7);border:1px solid #1a1a2a;color:#555;padding:5px 12px;border-radius:4px;cursor:pointer;font-size:0.6rem;letter-spacing:2px;transition:all 0.2s;" onmouseover="this.style.color='#34d399'" onmouseout="this.style.color='#555'">📦 BOX</button>
   <button onclick="openDex()" style="position:absolute;top:260px;left:10px;pointer-events:all;background:rgba(0,0,0,0.7);border:1px solid #1a1a2a;color:#555;padding:5px 12px;border-radius:4px;cursor:pointer;font-size:0.6rem;letter-spacing:2px;transition:all 0.2s;" onmouseover="this.style.color='#60a5fa'" onmouseout="this.style.color='#555'">📖 DEX</button>
   <button onclick="openAchievements()" style="position:absolute;top:290px;left:10px;pointer-events:all;background:rgba(0,0,0,0.7);border:1px solid #1a1a2a;color:#555;padding:5px 12px;border-radius:4px;cursor:pointer;font-size:0.6rem;letter-spacing:2px;transition:all 0.2s;" onmouseover="this.style.color='#f472b6'" onmouseout="this.style.color='#555'">🏅 BADGES</button>
+  <button onclick="openShop()" style="position:absolute;top:320px;left:10px;pointer-events:all;background:rgba(0,0,0,0.7);border:1px solid #1a1a2a;color:#555;padding:5px 12px;border-radius:4px;cursor:pointer;font-size:0.6rem;letter-spacing:2px;transition:all 0.2s;" onmouseover="this.style.color='#f59e0b'" onmouseout="this.style.color='#555'">🛒 SHOP</button>
+  <button onclick="openFusion()" style="position:absolute;top:350px;left:10px;pointer-events:all;background:rgba(0,0,0,0.7);border:1px solid #1a1a2a;color:#555;padding:5px 12px;border-radius:4px;cursor:pointer;font-size:0.6rem;letter-spacing:2px;transition:all 0.2s;" onmouseover="this.style.color='#c084fc'" onmouseout="this.style.color='#555'">⚗️ FUSE</button>
   <div id="quest-dot" style="position:absolute;top:198px;left:88px;width:8px;height:8px;background:#fbbf24;border-radius:50%;display:none;pointer-events:none;box-shadow:0 0 6px #fbbf24;"></div>
   <!-- Trainer Level HUD -->
   <div id="trainer-level-hud" style="position:absolute;top:50px;right:10px;display:flex;align-items:center;gap:4px;pointer-events:none;background:rgba(0,0,0,0.6);border:1px solid #8b5cf622;border-radius:4px;padding:4px 8px;min-width:100px;"></div>
@@ -1596,6 +1634,19 @@ body{background:#000;overflow:hidden;font-family:'Segoe UI',sans-serif;color:#ff
   </div>
   <div id="mode-label">M · SWITCH MODE</div>
   <div id="notifs"></div>
+  <div id="streak-banner"></div>
+  <div id="bpass-bar">
+    <div id="bpass-label">SEASON PASS</div>
+    <div id="bpass-track"><div id="bpass-fill" style="width:0%"></div></div>
+    <div id="bpass-lvl">LV 1</div>
+    <div id="bpass-next"></div>
+  </div>
+  <div id="bpass-milestone" style="display:none">
+    <div style="font-size:0.55rem;letter-spacing:3px;color:#a78bfa;margin-bottom:6px;">🎖️ SEASON PASS REWARD</div>
+    <div id="bpass-reward-text" style="font-size:0.75rem;font-weight:900;color:#fff;margin-bottom:4px;"></div>
+    <div id="bpass-reward-sub" style="font-size:0.5rem;color:#888;"></div>
+    <button onclick="document.getElementById('bpass-milestone').style.display='none'" style="margin-top:12px;background:linear-gradient(90deg,#7c3aed,#a78bfa);border:none;color:#fff;padding:8px 20px;border-radius:8px;cursor:pointer;font-size:0.55rem;letter-spacing:2px;font-weight:700;">CLAIM ✓</button>
+  </div>
   <!-- Capture popup — shown after winning a battle -->
   <div id="capture-popup" style="display:none;position:fixed;inset:0;z-index:450;background:rgba(0,0,0,0.88);flex-direction:column;align-items:center;justify-content:center;pointer-events:all;">
     <div style="background:linear-gradient(160deg,#0a0518,#060c1a);border:2px solid #f59e0b88;border-radius:18px;padding:32px 36px;text-align:center;max-width:340px;width:90%;animation:challengePop 0.4s cubic-bezier(0.2,1.4,0.4,1);">
@@ -10061,6 +10112,465 @@ if(startHint) startHint.innerHTML += '<br>H · Base &nbsp;|&nbsp; 🏆 RANKS but
     </div>
   </div>
 </div>
+
+<!-- ══ COIN SHOP PANEL ══ -->
+<div id="shop-panel">
+  <div style="width:100%;max-width:480px;padding-bottom:30px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+      <div style="font-size:0.9rem;font-weight:900;letter-spacing:4px;color:#f59e0b;">🛒 SHOP</div>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div id="shop-coins-display" style="font-size:0.65rem;font-weight:700;color:#f59e0b;background:rgba(245,158,11,0.1);border:1px solid #f59e0b44;border-radius:6px;padding:4px 10px;">🪙 0</div>
+        <button onclick="closeShop()" style="background:none;border:none;color:#555;cursor:pointer;font-size:1.2rem;">✕</button>
+      </div>
+    </div>
+    <div style="font-size:0.45rem;letter-spacing:3px;color:#555;margin-bottom:10px;">⚗️ BATTLE ITEMS</div>
+    <div id="shop-items-list"></div>
+    <div style="font-size:0.45rem;letter-spacing:3px;color:#555;margin:14px 0 10px;">✨ SPECIAL</div>
+    <div class="shop-item" onclick="shopBuyLucky()">
+      <div class="shop-item-icon">🍀</div>
+      <div class="shop-item-info">
+        <div class="shop-item-name">LUCKY ENCOUNTER</div>
+        <div class="shop-item-desc">Force-spawn a rare (3★+) super near you</div>
+      </div>
+      <div class="shop-item-cost">500🪙</div>
+    </div>
+    <div class="shop-item" onclick="shopBuyXPBoost()">
+      <div class="shop-item-icon">⚡</div>
+      <div class="shop-item-info">
+        <div class="shop-item-name">XP BOOST (1hr)</div>
+        <div class="shop-item-desc">2× trainer XP for the next hour</div>
+      </div>
+      <div class="shop-item-cost">300🪙</div>
+    </div>
+    <div class="shop-item" onclick="shopBuyRename()">
+      <div class="shop-item-icon">✏️</div>
+      <div class="shop-item-info">
+        <div class="shop-item-name">RENAME TOKEN</div>
+        <div class="shop-item-desc">Change any super's nickname</div>
+      </div>
+      <div class="shop-item-cost">150🪙</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SUPER FUSION PANEL ══ -->
+<div id="fusion-panel">
+  <div style="width:100%;max-width:480px;padding-bottom:30px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+      <div style="font-size:0.9rem;font-weight:900;letter-spacing:4px;color:#a78bfa;">⚗️ FUSION</div>
+      <button onclick="closeFusion()" style="background:none;border:none;color:#555;cursor:pointer;font-size:1.2rem;">✕</button>
+    </div>
+    <div style="font-size:0.45rem;color:#555;letter-spacing:2px;margin-bottom:18px;">MERGE TWO SUPERS OF THE SAME ARCHETYPE INTO A MORE POWERFUL HYBRID</div>
+    <div style="display:flex;align-items:center;justify-content:center;gap:24px;margin-bottom:24px;">
+      <div id="fusion-slot-a" class="fusion-slot" onclick="openFusionPicker('a')">➕</div>
+      <div style="font-size:1.5rem;color:#a78bfa;">⚗️</div>
+      <div id="fusion-slot-b" class="fusion-slot" onclick="openFusionPicker('b')">➕</div>
+    </div>
+    <div id="fusion-preview" style="display:none;background:rgba(167,139,250,0.06);border:1px solid #a78bfa44;border-radius:12px;padding:16px;text-align:center;margin-bottom:16px;">
+      <div style="font-size:0.5rem;letter-spacing:2px;color:#a78bfa;margin-bottom:8px;">FUSION RESULT</div>
+      <div id="fusion-result-icon" style="font-size:2.5rem;margin-bottom:4px;"></div>
+      <div id="fusion-result-name" style="font-size:0.7rem;font-weight:900;color:#fff;letter-spacing:2px;margin-bottom:8px;"></div>
+      <div id="fusion-result-stats" style="font-size:0.5rem;color:#aaa;"></div>
+    </div>
+    <button id="fusion-btn" onclick="doFusion()" style="display:none;width:100%;padding:14px;background:linear-gradient(90deg,#7c3aed,#a78bfa);border:none;color:#fff;border-radius:10px;cursor:pointer;font-size:0.65rem;font-weight:900;letter-spacing:3px;">⚗️ FUSE!</button>
+    <div id="fusion-picker" style="display:none;margin-top:16px;">
+      <div style="font-size:0.45rem;letter-spacing:2px;color:#555;margin-bottom:10px;">CHOOSE A SUPER:</div>
+      <div id="fusion-picker-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ LOGIN STREAK MODAL ══ -->
+<div id="streak-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:250;align-items:center;justify-content:center;">
+  <div style="background:linear-gradient(135deg,#1a0a00,#2d1500);border:2px solid #f59e0b44;border-radius:16px;padding:28px;max-width:360px;width:90%;text-align:center;">
+    <div style="font-size:2rem;margin-bottom:4px;">🔥</div>
+    <div id="streak-modal-title" style="font-size:0.85rem;font-weight:900;letter-spacing:4px;color:#f59e0b;margin-bottom:4px;"></div>
+    <div id="streak-modal-sub" style="font-size:0.5rem;color:#888;letter-spacing:2px;margin-bottom:18px;"></div>
+    <div id="streak-days-row" style="display:flex;gap:8px;justify-content:center;margin-bottom:18px;"></div>
+    <div id="streak-reward-box" style="background:rgba(245,158,11,0.08);border:1px solid #f59e0b33;border-radius:10px;padding:12px;margin-bottom:16px;">
+      <div style="font-size:0.5rem;color:#888;margin-bottom:4px;">TODAY'S REWARD</div>
+      <div id="streak-reward-text" style="font-size:0.75rem;font-weight:900;color:#fbbf24;"></div>
+    </div>
+    <button onclick="claimStreakReward()" id="streak-claim-btn" style="width:100%;padding:12px;background:linear-gradient(90deg,#b45309,#f59e0b);border:none;color:#000;border-radius:8px;cursor:pointer;font-size:0.65rem;font-weight:900;letter-spacing:3px;">🔥 CLAIM REWARD</button>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════════════════════
+// 🛒 COIN SHOP
+// ════════════════════════════════════════════════════════
+const SHOP_ITEMS = [
+  { id:'potion',  qty:3,  cost:50  },
+  { id:'xattack', qty:1,  cost:80  },
+  { id:'revive',  qty:1,  cost:120 },
+  { id:'elixir',  qty:1,  cost:200 },
+];
+
+window.openShop = function(){
+  const panel = document.getElementById('shop-panel');
+  document.getElementById('shop-coins-display').textContent = '🪙 ' + getCoins();
+  const list = document.getElementById('shop-items-list');
+  list.innerHTML = SHOP_ITEMS.map(si => {
+    const item = ITEMS[si.id];
+    return `<div class="shop-item" onclick="shopBuyItem('${si.id}',${si.qty},${si.cost})">
+      <div class="shop-item-icon">${item.icon}</div>
+      <div class="shop-item-info">
+        <div class="shop-item-name">${item.name} ×${si.qty}</div>
+        <div class="shop-item-desc">${item.desc}</div>
+      </div>
+      <div class="shop-item-cost">${si.cost}🪙</div>
+    </div>`;
+  }).join('');
+  panel.style.display = 'flex';
+};
+
+window.closeShop = function(){ document.getElementById('shop-panel').style.display='none'; };
+
+window.shopBuyItem = function(id, qty, cost){
+  if(getCoins() < cost){ notify('Not enough coins!','bad'); return; }
+  addCoins(-cost);
+  const inv = getItems(); inv[id] = (inv[id]||0) + qty; saveItems(inv);
+  document.getElementById('shop-coins-display').textContent = '🪙 ' + getCoins();
+  notify(`${ITEMS[id].icon} Bought ${ITEMS[id].name} ×${qty}!`, 'good');
+  SFX.levelup();
+};
+
+window.shopBuyLucky = function(){
+  if(getCoins() < 500){ notify('Not enough coins!','bad'); return; }
+  addCoins(-500);
+  // Spawn a random rarity 3+ super near player
+  const rares = SUPERS.map((s,i)=>({i,s})).filter(x=>x.s.rarity>=3);
+  const pick = rares[Math.floor(Math.random()*rares.length)];
+  const angle = Math.random()*Math.PI*2;
+  spawnWildSuper(pick.i, player.position.x+Math.cos(angle)*8, player.position.z+Math.sin(angle)*8);
+  notify('🍀 A rare super appeared nearby!','good');
+  closeShop();
+};
+
+window.shopBuyXPBoost = function(){
+  if(getCoins() < 300){ notify('Not enough coins!','bad'); return; }
+  addCoins(-300);
+  localStorage.setItem('sf_xpboost_until', Date.now() + 3600000);
+  notify('⚡ 2× XP Boost active for 1 hour!','good');
+  document.getElementById('shop-coins-display').textContent = '🪙 ' + getCoins();
+};
+
+window.shopBuyRename = function(){
+  if(getCoins() < 150){ notify('Not enough coins!','bad'); return; }
+  const name = prompt('Enter nickname for which super? (type super name)');
+  if(!name) return;
+  const s = [...team, ...superBox].find(x => x.name.toLowerCase()===name.toLowerCase());
+  if(!s){ notify('Super not found','bad'); return; }
+  const nick = prompt(`New nickname for ${s.name}:`);
+  if(!nick) return;
+  addCoins(-150);
+  s.nickname = nick.slice(0,16);
+  saveGame(); saveBox();
+  notify(`✏️ ${s.name} is now "${s.nickname}"!`,'good');
+  document.getElementById('shop-coins-display').textContent = '🪙 ' + getCoins();
+};
+
+// XP boost multiplier hook
+const _origGainTrainerXp = gainTrainerXp;
+window.gainTrainerXp = function(amount, reason){
+  const boost = localStorage.getItem('sf_xpboost_until');
+  if(boost && Date.now() < parseInt(boost)) amount = Math.round(amount * 2);
+  _origGainTrainerXp(amount, reason);
+};
+
+// ════════════════════════════════════════════════════════
+// 🔥 LOGIN STREAK
+// ════════════════════════════════════════════════════════
+const STREAK_REWARDS = [
+  { day:1, label:'+50 coins',     fn:()=>addCoins(50) },
+  { day:2, label:'+100 coins',    fn:()=>addCoins(100) },
+  { day:3, label:'+1 Potion ×3',  fn:()=>{ const inv=getItems(); inv.potion=(inv.potion||0)+3; saveItems(inv); } },
+  { day:4, label:'+200 coins',    fn:()=>addCoins(200) },
+  { day:5, label:'+1 Elixir',     fn:()=>{ const inv=getItems(); inv.elixir=(inv.elixir||0)+1; saveItems(inv); } },
+  { day:6, label:'+300 coins',    fn:()=>addCoins(300) },
+  { day:7, label:'🌟 500 coins + Rare Spawn!', fn:()=>{ addCoins(500); setTimeout(()=>shopBuyLucky&&(getCoins()>=0)&&spawnWildSuper(SUPERS.map((s,i)=>({i,r:s.rarity})).filter(x=>x.r>=4).sort(()=>Math.random()-0.5)[0]?.i||0, player?.position?.x||0, player?.position?.z||5), 2000); } },
+];
+
+function getStreakData(){
+  return JSON.parse(localStorage.getItem('sf_streak_v1')||'{"streak":0,"lastDate":"","claimed":false}');
+}
+function saveStreakData(d){ localStorage.setItem('sf_streak_v1', JSON.stringify(d)); }
+
+function checkLoginStreak(){
+  const today = new Date().toDateString();
+  const d = getStreakData();
+  const yesterday = new Date(Date.now()-86400000).toDateString();
+  if(d.lastDate === today) return; // already handled today
+  if(d.lastDate === yesterday){
+    d.streak = Math.min(d.streak + 1, 7);
+  } else if(d.lastDate !== today){
+    d.streak = 1; // reset or start
+  }
+  d.lastDate = today;
+  d.claimed = false;
+  saveStreakData(d);
+  showStreakModal(d);
+}
+
+function showStreakModal(d){
+  const modal = document.getElementById('streak-modal');
+  const streak = d.streak;
+  document.getElementById('streak-modal-title').textContent = `DAY ${streak} STREAK 🔥`;
+  document.getElementById('streak-modal-sub').textContent = streak >= 7 ? 'MAXIMUM STREAK — LEGENDARY REWARD!' : `COME BACK TOMORROW FOR DAY ${Math.min(streak+1,7)}`;
+  const idx = Math.min(streak,7)-1;
+  const reward = STREAK_REWARDS[idx];
+  document.getElementById('streak-reward-text').textContent = reward.label;
+  // Draw 7 day circles
+  const row = document.getElementById('streak-days-row');
+  row.innerHTML = STREAK_REWARDS.map((r,i)=>{
+    const dayNum = i+1;
+    const cls = dayNum < streak ? 'claimed' : dayNum === streak ? 'today' : '';
+    return `<div class="streak-day ${cls}"><div style="font-size:0.7rem;">${dayNum===7?'🌟':'🔥'}</div><div style="font-size:0.4rem;color:${cls==='today'?'#000':'#888'}">D${dayNum}</div></div>`;
+  }).join('');
+  modal.style.display = 'flex';
+}
+
+window.claimStreakReward = function(){
+  const d = getStreakData();
+  if(d.claimed){ notify('Already claimed today!','bad'); return; }
+  const idx = Math.min(d.streak,7)-1;
+  STREAK_REWARDS[idx].fn();
+  d.claimed = true;
+  saveStreakData(d);
+  document.getElementById('streak-modal').style.display = 'none';
+  notify(`🔥 Day ${d.streak} reward claimed!`,'good');
+  SFX.levelup();
+  progressQuest('login1', 1);
+};
+
+// ════════════════════════════════════════════════════════
+// 🎖️ SEASON BATTLE PASS
+// ════════════════════════════════════════════════════════
+const BPASS_XP_PER_LEVEL = 500;
+const BPASS_MAX_LEVEL = 50;
+const BPASS_MILESTONES = {
+  5:  { label:'+200 Coins',        fn:()=>addCoins(200) },
+  10: { label:'+1 Elixir',         fn:()=>{ const inv=getItems(); inv.elixir=(inv.elixir||0)+1; saveItems(inv); } },
+  15: { label:'+500 Coins',        fn:()=>addCoins(500) },
+  20: { label:'Lucky Encounter',   fn:()=>{ const rares=SUPERS.map((s,i)=>({i,s})).filter(x=>x.s.rarity>=4); const p=rares[Math.floor(Math.random()*rares.length)]; spawnWildSuper(p.i, player.position.x+5, player.position.z+5); } },
+  25: { label:'+1000 Coins',       fn:()=>addCoins(1000) },
+  30: { label:'+2 Elixir',         fn:()=>{ const inv=getItems(); inv.elixir=(inv.elixir||0)+2; saveItems(inv); } },
+  40: { label:'+2000 Coins',       fn:()=>addCoins(2000) },
+  50: { label:'🌟 LEGENDARY SPAWN',fn:()=>{ const leg=SUPERS.map((s,i)=>({i,s})).filter(x=>x.s.rarity>=5); if(leg.length){ const p=leg[Math.floor(Math.random()*leg.length)]; spawnWildSuper(p.i, player.position.x+6, player.position.z+6); } } },
+};
+
+function getBPassData(){
+  return JSON.parse(localStorage.getItem('sf_bpass_v1')||'{"level":1,"xp":0,"claimed":{}}');
+}
+function saveBPass(d){ localStorage.setItem('sf_bpass_v1', JSON.stringify(d)); }
+
+function gainBPassXP(amount){
+  const d = getBPassData();
+  if(d.level >= BPASS_MAX_LEVEL) return;
+  d.xp += amount;
+  while(d.xp >= BPASS_XP_PER_LEVEL && d.level < BPASS_MAX_LEVEL){
+    d.xp -= BPASS_XP_PER_LEVEL;
+    d.level++;
+    if(BPASS_MILESTONES[d.level] && !d.claimed[d.level]){
+      d.claimed[d.level] = true;
+      saveBPass(d);
+      const m = BPASS_MILESTONES[d.level];
+      m.fn();
+      const ms = document.getElementById('bpass-milestone');
+      document.getElementById('bpass-reward-text').textContent = `LEVEL ${d.level} REACHED!`;
+      document.getElementById('bpass-reward-sub').textContent = m.label;
+      ms.style.display = 'block';
+      setTimeout(()=>ms.style.display='none', 5000);
+      SFX.levelup();
+    }
+  }
+  saveBPass(d);
+  updateBPassBar();
+}
+
+function updateBPassBar(){
+  const d = getBPassData();
+  const pct = d.level >= BPASS_MAX_LEVEL ? 100 : Math.round((d.xp/BPASS_XP_PER_LEVEL)*100);
+  document.getElementById('bpass-fill').style.width = pct+'%';
+  document.getElementById('bpass-lvl').textContent = 'LV '+d.level;
+  const nextMilestone = Object.keys(BPASS_MILESTONES).map(Number).sort((a,b)=>a-b).find(l=>l>d.level);
+  document.getElementById('bpass-next').textContent = nextMilestone ? `Next reward: LV${nextMilestone}` : 'MAX';
+}
+
+// Hook gainTrainerXp to also award battle pass XP
+const _origGainTrainerXp2 = window.gainTrainerXp;
+window.gainTrainerXp = function(amount, reason){
+  _origGainTrainerXp2(amount, reason);
+  gainBPassXP(Math.round(amount * 0.5));
+};
+
+// ════════════════════════════════════════════════════════
+// ⚗️ SUPER FUSION
+// ════════════════════════════════════════════════════════
+let fusionSlots = { a: null, b: null };
+let fusionPickingSlot = null;
+
+window.openFusion = function(){
+  fusionSlots = { a:null, b:null };
+  fusionPickingSlot = null;
+  document.getElementById('fusion-slot-a').textContent = '➕';
+  document.getElementById('fusion-slot-a').className = 'fusion-slot';
+  document.getElementById('fusion-slot-b').textContent = '➕';
+  document.getElementById('fusion-slot-b').className = 'fusion-slot';
+  document.getElementById('fusion-preview').style.display = 'none';
+  document.getElementById('fusion-btn').style.display = 'none';
+  document.getElementById('fusion-picker').style.display = 'none';
+  document.getElementById('fusion-panel').style.display = 'flex';
+};
+
+window.closeFusion = function(){ document.getElementById('fusion-panel').style.display='none'; };
+
+window.openFusionPicker = function(slot){
+  fusionPickingSlot = slot;
+  const picker = document.getElementById('fusion-picker');
+  const grid = document.getElementById('fusion-picker-grid');
+  const all = [...team.map((s,i)=>({s,src:'team',i})), ...superBox.map((s,i)=>({s,src:'box',i}))];
+  grid.innerHTML = all.map((x,gi)=>`
+    <div onclick="selectFusionSuper(${gi})" style="background:rgba(255,255,255,0.03);border:1px solid #1a1a2a;border-radius:8px;padding:8px;text-align:center;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1a1a2a'">
+      <div style="font-size:1.5rem;">${x.s.icon||'⚡'}</div>
+      <div style="font-size:0.45rem;color:#aaa;letter-spacing:1px;">${(x.s.nickname||x.s.name).slice(0,10)}</div>
+      <div style="font-size:0.4rem;color:#555;">${x.s.type}</div>
+    </div>`).join('');
+  picker.style.display = 'block';
+  picker._all = all;
+};
+
+window.selectFusionSuper = function(gi){
+  const all = document.getElementById('fusion-picker')._all;
+  const chosen = all[gi];
+  fusionSlots[fusionPickingSlot] = chosen;
+  const slotEl = document.getElementById('fusion-slot-' + fusionPickingSlot);
+  slotEl.textContent = chosen.s.icon || '⚡';
+  slotEl.className = 'fusion-slot filled';
+  document.getElementById('fusion-picker').style.display = 'none';
+  updateFusionPreview();
+};
+
+function updateFusionPreview(){
+  const a = fusionSlots.a, b = fusionSlots.b;
+  if(!a||!b) return;
+  const preview = document.getElementById('fusion-preview');
+  const btn = document.getElementById('fusion-btn');
+  if(a.s.type !== b.s.type){
+    preview.style.display='block';
+    document.getElementById('fusion-result-icon').textContent='❌';
+    document.getElementById('fusion-result-name').textContent='INCOMPATIBLE TYPES';
+    document.getElementById('fusion-result-stats').textContent='Both supers must share the same archetype type';
+    btn.style.display='none';
+    return;
+  }
+  const fusedName = a.s.name.split(' ')[0] + '-' + b.s.name.split(' ').pop();
+  const fusedHp  = Math.round((a.s.maxHp  + b.s.maxHp)  * 0.65);
+  const fusedAtk = Math.round((a.s.attack + b.s.attack) * 0.65);
+  const fusedDef = Math.round((a.s.defense+ b.s.defense)* 0.65);
+  const fusedSpd = Math.round((a.s.speed  + b.s.speed)  * 0.65);
+  const fusedRar = Math.min(5, Math.max(a.s.rarity, b.s.rarity) + 1);
+  preview.style.display='block';
+  document.getElementById('fusion-result-icon').textContent = '⚗️';
+  document.getElementById('fusion-result-name').textContent = fusedName.toUpperCase();
+  document.getElementById('fusion-result-stats').textContent =
+    `❤️ ${fusedHp}  ⚔️ ${fusedAtk}  🛡️ ${fusedDef}  ⚡ ${fusedSpd}  ★${'★'.repeat(fusedRar-1)}`;
+  btn.style.display='block';
+  btn._fusedData = { fusedName, fusedHp, fusedAtk, fusedDef, fusedSpd, fusedRar, type:a.s.type, icon:'⚗️' };
+}
+
+window.doFusion = function(){
+  const a = fusionSlots.a, b = fusionSlots.b;
+  if(!a||!b) return;
+  const fd = document.getElementById('fusion-btn')._fusedData;
+  if(!fd) return;
+  // Remove source supers (from team or box)
+  [a,b].forEach(x=>{
+    if(x.src==='team') team.splice(team.indexOf(x.s),1);
+    else superBox.splice(superBox.indexOf(x.s),1);
+  });
+  saveGame(); saveBox();
+  // Build fused super
+  const fused = {
+    name: fd.fusedName, nickname: fd.fusedName, icon: '⚗️',
+    type: fd.type, rarity: fd.fusedRar,
+    maxHp: fd.fusedHp, hp: fd.fusedHp,
+    attack: fd.fusedAtk, defense: fd.fusedDef, speed: fd.fusedSpd,
+    moves: [...(a.s.moves||[])].slice(0,2).concat([...(b.s.moves||[])].slice(0,2)),
+    fused: true
+  };
+  if(team.length < 6) team.push(fused);
+  else superBox.push(fused);
+  saveGame(); saveBox();
+  buildTeamBar();
+  notify(`⚗️ ${fd.fusedName} created!`, 'good');
+  SFX.levelup();
+  gainBPassXP(200);
+  closeFusion();
+};
+
+// ════════════════════════════════════════════════════════
+// ⚡ TYPE EFFECTIVENESS
+// ════════════════════════════════════════════════════════
+const TYPE_CHART = {
+  fire:     { fire:0.5, water:0.5, energy:1,   psychic:1,   speed:1,   strength:2,   defense:2,   nature:2   },
+  water:    { fire:2,   water:0.5, energy:1,   psychic:1,   speed:1,   strength:1,   defense:0.5, nature:0.5 },
+  energy:   { fire:1,   water:1,   energy:0.5, psychic:0.5, speed:2,   strength:0.5, defense:1,   nature:1   },
+  psychic:  { fire:1,   water:1,   energy:2,   psychic:0.5, speed:1,   strength:0.5, defense:1,   nature:1   },
+  speed:    { fire:1,   water:1,   energy:0.5, psychic:1,   speed:0.5, strength:1,   defense:1,   nature:1   },
+  strength: { fire:0.5, water:1,   energy:2,   psychic:2,   speed:1,   strength:1,   defense:0.5, nature:1   },
+  defense:  { fire:0.5, water:2,   energy:1,   psychic:1,   speed:1,   strength:2,   defense:0.5, nature:1   },
+  nature:   { fire:0.5, water:2,   energy:1,   psychic:1,   speed:1,   strength:1,   defense:1,   nature:0.5 },
+};
+
+function getTypeMultiplier(atkType, defType){
+  return TYPE_CHART[atkType]?.[defType] ?? 1;
+}
+
+// Patch flashHit to show effectiveness badge
+const _origFlashHit = flashHit;
+window.flashHit = function(who, dmg, moveType, isBig){
+  _origFlashHit(who, dmg, moveType, isBig);
+  const atkType = moveType;
+  const defSuperType = who === 'opp' ? (oppBattleSuper?.type || wildBattleOppSuper?.type) : myBattleSuper?.type;
+  if(!atkType || !defSuperType) return;
+  const mult = getTypeMultiplier(atkType, defSuperType);
+  if(mult === 1) return;
+  const sprite = document.getElementById(who+'-sprite');
+  if(!sprite) return;
+  const pop = document.createElement('div');
+  pop.className = 'effectiveness-pop';
+  if(mult >= 2){
+    pop.textContent = '⚡ SUPER EFFECTIVE!';
+    pop.style.cssText += 'background:#f59e0b22;color:#fbbf24;border:1px solid #f59e0b55;';
+  } else {
+    pop.textContent = 'not very effective…';
+    pop.style.cssText += 'background:#33333322;color:#888;border:1px solid #33333355;';
+  }
+  sprite.style.position = 'relative';
+  sprite.appendChild(pop);
+  setTimeout(()=>pop.remove(), 1300);
+};
+
+// Wild battle type effectiveness
+const _origWBFlashHit = window.flashHit;
+
+// ════════════════════════════════════════════════════════
+// 🚀 INIT ALL NEW SYSTEMS
+// ════════════════════════════════════════════════════════
+(function initNewSystems(){
+  // Battle pass bar
+  updateBPassBar();
+  // Login streak — check after a short delay so game has loaded
+  setTimeout(checkLoginStreak, 2500);
+  // Quest: add login quest if not in QUEST_DEFS
+  if(typeof QUEST_DEFS !== 'undefined'){
+    if(!QUEST_DEFS.find(q=>q.id==='login1')){
+      QUEST_DEFS.push({id:'login1', label:'Log in today', icon:'📅', target:1, reward:30});
+    }
+  }
+})();
+</script>
 
 <script>
 if ('serviceWorker' in navigator) {
