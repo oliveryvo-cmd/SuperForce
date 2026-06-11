@@ -3694,14 +3694,12 @@ setInterval(()=>{ if(myId) saveGame(); }, 30000);
 function initWS(){
   // On GitHub Pages (no server), run in offline solo mode
   if(location.hostname.includes('github.io')||location.protocol==='file:'){
-    notify('Playing offline — solo mode','warn');
-    ws={send:()=>{},close:()=>{}};
-    // Fake open event so game initialises
+    ws={send:()=>{},close:()=>{},readyState:1};
+    // Fake open event so game initialises — delay so notify() is defined
     setTimeout(()=>{
-      ws.readyState=1;
-      const fakeOpen=new Event('open');
-      if(ws.onopen) ws.onopen(fakeOpen);
-    },200);
+      if(typeof notify==='function') notify('Playing offline — solo mode','warn');
+      if(ws.onopen) ws.onopen(new Event('open'));
+    },800);
     return;
   }
   const proto=location.protocol==='https:'?'wss:':'ws:';
