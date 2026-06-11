@@ -1032,6 +1032,36 @@ body{background:#000;overflow:hidden;font-family:'Segoe UI',sans-serif;color:#ff
 @keyframes shinySparkle{0%,100%{filter:drop-shadow(0 0 8px #f59e0b)}50%{filter:drop-shadow(0 0 20px #f59e0b) brightness(1.3)}}
 .shiny-icon{animation:shinySparkle 1.5s ease-in-out infinite;}
 
+/* ── FACTION WARS ── */
+#faction-select{position:fixed;inset:0;background:radial-gradient(ellipse at center,#0a0020,#000);z-index:1000;display:none;flex-direction:column;align-items:center;justify-content:center;padding:20px;}
+#faction-select h1{font-size:1.1rem;font-weight:900;letter-spacing:6px;color:#fff;margin-bottom:4px;}
+#faction-select p{font-size:0.5rem;color:#555;letter-spacing:3px;margin-bottom:28px;}
+.faction-card{width:100%;max-width:460px;border-radius:14px;border:2px solid transparent;padding:18px 22px;cursor:pointer;transition:all 0.25s;margin-bottom:10px;background:rgba(255,255,255,0.03);display:flex;align-items:center;gap:16px;}
+.faction-card:hover{transform:scale(1.03);}
+.faction-card .fi{font-size:2.2rem;flex-shrink:0;}
+.faction-card .ft{flex:1;}
+.faction-card .fn{font-size:0.7rem;font-weight:900;letter-spacing:3px;}
+.faction-card .fd{font-size:0.48rem;color:#888;margin-top:3px;letter-spacing:1px;}
+.faction-card .fp{font-size:0.42rem;letter-spacing:2px;margin-top:5px;opacity:0.7;}
+.faction-card.volt  {border-color:#facc1555;} .faction-card.volt:hover{border-color:#facc15;box-shadow:0 0 30px #facc1533;}
+.faction-card.iron  {border-color:#94a3b855;} .faction-card.iron:hover{border-color:#94a3b8;box-shadow:0 0 30px #94a3b833;}
+.faction-card.shadow{border-color:#a855f755;} .faction-card.shadow:hover{border-color:#a855f7;box-shadow:0 0 30px #a855f733;}
+.faction-card.inferno{border-color:#ef444455;}.faction-card.inferno:hover{border-color:#ef4444;box-shadow:0 0 30px #ef444433;}
+#faction-hud{position:absolute;top:16px;left:50%;transform:translateX(-50%);pointer-events:none;display:flex;align-items:center;gap:6px;background:rgba(0,0,0,0.7);border-radius:20px;padding:4px 12px;border:1px solid transparent;}
+#faction-hud .fh-icon{font-size:0.9rem;}
+#faction-hud .fh-name{font-size:0.45rem;font-weight:900;letter-spacing:2px;}
+#faction-hud .fh-bonus{font-size:0.4rem;color:#4ade80;margin-left:4px;}
+.faction-zone-label{position:absolute;font-size:0.4rem;letter-spacing:1px;color:rgba(255,255,255,0.4);pointer-events:none;}
+
+/* ── VAULT HUNT ── */
+#vault-panel{position:fixed;inset:0;background:rgba(0,0,6,0.97);z-index:96;display:none;flex-direction:column;align-items:center;overflow-y:auto;padding:20px;}
+.vault-clue{background:rgba(255,255,255,0.03);border:1px solid #1a1a3a;border-radius:10px;padding:14px;margin-bottom:8px;display:flex;gap:12px;align-items:flex-start;}
+.vault-clue.locked{opacity:0.35;filter:blur(0.5px);}
+.vault-clue .vc-day{font-size:0.55rem;font-weight:900;color:#f59e0b;letter-spacing:2px;white-space:nowrap;padding-top:2px;}
+.vault-clue .vc-text{font-size:0.55rem;color:#ccc;line-height:1.6;}
+@keyframes vaultGlow{0%,100%{box-shadow:0 0 20px #f59e0b,0 0 40px #f59e0b44}50%{box-shadow:0 0 40px #fbbf24,0 0 80px #f59e0b88}}
+#vault-found-banner{position:fixed;top:0;left:0;right:0;z-index:500;background:linear-gradient(90deg,#92400e,#f59e0b,#92400e);color:#000;text-align:center;padding:10px;font-size:0.6rem;font-weight:900;letter-spacing:3px;display:none;}
+
 /* ── COIN SHOP ── */
 #shop-panel{position:fixed;inset:0;background:rgba(0,0,6,0.97);z-index:96;display:none;flex-direction:column;align-items:center;overflow-y:auto;padding:20px;}
 .shop-item{background:rgba(255,255,255,0.03);border:1px solid #1a1a3a;border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:all 0.2s;margin-bottom:8px;}
@@ -1668,6 +1698,8 @@ body{background:#000;overflow:hidden;font-family:'Segoe UI',sans-serif;color:#ff
   <button onclick="openDex()" style="position:absolute;top:260px;left:10px;pointer-events:all;background:rgba(0,0,0,0.7);border:1px solid #1a1a2a;color:#555;padding:5px 12px;border-radius:4px;cursor:pointer;font-size:0.6rem;letter-spacing:2px;transition:all 0.2s;" onmouseover="this.style.color='#60a5fa'" onmouseout="this.style.color='#555'">📖 DEX</button>
   <button onclick="openAchievements()" style="position:absolute;top:290px;left:10px;pointer-events:all;background:rgba(0,0,0,0.7);border:1px solid #1a1a2a;color:#555;padding:5px 12px;border-radius:4px;cursor:pointer;font-size:0.6rem;letter-spacing:2px;transition:all 0.2s;" onmouseover="this.style.color='#f472b6'" onmouseout="this.style.color='#555'">🏅 BADGES</button>
   <button onclick="openShop()" style="position:absolute;top:320px;left:10px;pointer-events:all;background:rgba(0,0,0,0.7);border:1px solid #1a1a2a;color:#555;padding:5px 12px;border-radius:4px;cursor:pointer;font-size:0.6rem;letter-spacing:2px;transition:all 0.2s;" onmouseover="this.style.color='#f59e0b'" onmouseout="this.style.color='#555'">🛒 SHOP</button>
+  <button onclick="openVaultPanel()" style="position:absolute;top:380px;left:10px;pointer-events:all;background:rgba(0,0,0,0.7);border:1px solid #1a1a2a;color:#555;padding:5px 12px;border-radius:4px;cursor:pointer;font-size:0.6rem;letter-spacing:2px;transition:all 0.2s;" onmouseover="this.style.color='#f59e0b'" onmouseout="this.style.color='#555'">🏆 VAULT</button>
+  <button onclick="openFaction()" style="position:absolute;top:410px;left:10px;pointer-events:all;background:rgba(0,0,0,0.7);border:1px solid #1a1a2a;color:#555;padding:5px 12px;border-radius:4px;cursor:pointer;font-size:0.6rem;letter-spacing:2px;transition:all 0.2s;" onmouseover="this.style.color='#a855f7'" onmouseout="this.style.color='#555'">⚔️ WAR</button>
   <button onclick="openFusion()" style="position:absolute;top:350px;left:10px;pointer-events:all;background:rgba(0,0,0,0.7);border:1px solid #1a1a2a;color:#555;padding:5px 12px;border-radius:4px;cursor:pointer;font-size:0.6rem;letter-spacing:2px;transition:all 0.2s;" onmouseover="this.style.color='#c084fc'" onmouseout="this.style.color='#555'">⚗️ FUSE</button>
   <div id="quest-dot" style="position:absolute;top:198px;left:88px;width:8px;height:8px;background:#fbbf24;border-radius:50%;display:none;pointer-events:none;box-shadow:0 0 6px #fbbf24;"></div>
   <!-- Trainer Level HUD -->
@@ -1679,6 +1711,11 @@ body{background:#000;overflow:hidden;font-family:'Segoe UI',sans-serif;color:#ff
     <button class="mode-btn battle" id="mode-battle-btn" onclick="setMode('battle')">⚔️ BATTLE</button>
   </div>
   <div id="mode-label">M · SWITCH MODE</div>
+  <div id="faction-hud" style="display:none;border-color:transparent;">
+    <span class="fh-icon"></span>
+    <span class="fh-name"></span>
+    <span class="fh-bonus"></span>
+  </div>
   <div id="notifs"></div>
   <div id="streak-banner"></div>
   <div id="bpass-bar">
@@ -3714,6 +3751,7 @@ function makeRemotePlayer(name){
 
 // ── Player state ──────────────────────────────────────────────────────────────
 let myId=null, myName='Trainer', ws=null;
+let myFaction = localStorage.getItem('sf_faction') || null;
 let team = []; // populated by loadGame() below
 let gameMode = 'catch'; // may be overwritten by loadGame()
 
@@ -4032,7 +4070,17 @@ let isMyTurn=false, challengeFromId=null;
 document.getElementById('startBtn').addEventListener('click',()=>{
   const raw = document.getElementById('trainer-name').value.trim();
   myName = raw.replace(/[^a-zA-Z0-9_]/g,'').slice(0,14) || 'Trainer';
+  if(!myFaction){
+    document.getElementById('start').style.display='none';
+    document.getElementById('faction-select').style.display='flex';
+    return;
+  }
+  launchGame();
+});
+
+function launchGame(){
   document.getElementById('start').style.display='none';
+  document.getElementById('faction-select').style.display='none';
   document.getElementById('hud').style.display='block';
   document.getElementById('chat-toggle').style.display='block';
   document.getElementById('weather-hud').style.display='block';
@@ -4043,12 +4091,14 @@ document.getElementById('startBtn').addEventListener('click',()=>{
   initWS();
   buildTeamBar();
   updateTrainerHud();
+  updateFactionHud();
+  setTimeout(initVaultHunt, 3000);
   // Dev mode — localhost (your Mac) only. Cloudflare tunnel users are blocked.
   const isLocalMac = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
-  if(isLocalMac && DEV_NAMES.has(raw.toLowerCase().replace(/\s+/g,' ').trim())){
+  if(isLocalMac && DEV_NAMES.has(myName.toLowerCase().replace(/\s+/g,' ').trim())){
     setTimeout(activateDevMode, 800);
   }
-});
+}
 document.getElementById('trainer-name').addEventListener('keydown',e=>{ if(e.key==='Enter') document.getElementById('startBtn').click(); });
 // Pre-fill name from save
 if(savedData?.name && savedData.name !== 'Trainer'){
@@ -9240,7 +9290,7 @@ setTimeout(()=>{ spawnDungeonPortals(); startWorldEvents(); }, 2000);
 
 // Check dungeons in render loop (patch onto frame checks)
 const _origCheckBossProx=checkBossProximity;
-window.checkBossProximity=function(p){ _origCheckBossProx(p); checkDungeonProximity(p); };
+window.checkBossProximity=function(p){ _origCheckBossProx(p); checkDungeonProximity(p); checkVaultProximity(p); };
 
 // Add TRADE button to nearby player panel
 const _nppBtn=document.getElementById('npp-challenge-btn');
@@ -10308,6 +10358,68 @@ if(startHint) startHint.innerHTML += '<br>H · Base &nbsp;|&nbsp; 🏆 RANKS but
   </div>
 </div>
 
+<!-- ══ FACTION SELECT ══ -->
+<div id="faction-select">
+  <h1>⚡ CHOOSE YOUR FACTION</h1>
+  <p>YOUR CHOICE SHAPES THE WAR — PICK WISELY</p>
+  <div class="faction-card volt"  onclick="chooseFaction('VOLT')">
+    <div class="fi">⚡</div>
+    <div class="ft">
+      <div class="fn" style="color:#facc15">VOLT ORDER</div>
+      <div class="fd">Masters of speed and electricity. Strike first, strike hard.</div>
+      <div class="fp" style="color:#facc15">▸ Speedsters & Electric supers · +20% SPD in territory</div>
+    </div>
+  </div>
+  <div class="faction-card iron" onclick="chooseFaction('IRON')">
+    <div class="fi">🛡️</div>
+    <div class="ft">
+      <div class="fn" style="color:#94a3b8">IRON WALL</div>
+      <div class="fd">Unbreakable defence. They have never fallen. They never will.</div>
+      <div class="fp" style="color:#94a3b8">▸ Juggernauts & Strength supers · +20% DEF in territory</div>
+    </div>
+  </div>
+  <div class="faction-card shadow" onclick="chooseFaction('SHADOW')">
+    <div class="fi">👁️</div>
+    <div class="ft">
+      <div class="fn" style="color:#a855f7">SHADOW GUILD</div>
+      <div class="fd">Silent. Unseen. By the time you notice them, it's already over.</div>
+      <div class="fp" style="color:#a855f7">▸ Assassins & Psychic supers · +20% ATK in territory</div>
+    </div>
+  </div>
+  <div class="faction-card inferno" onclick="chooseFaction('INFERNO')">
+    <div class="fi">🔥</div>
+    <div class="ft">
+      <div class="fn" style="color:#ef4444">INFERNO PACT</div>
+      <div class="fd">Consume everything. Leave nothing standing. Born from chaos.</div>
+      <div class="fp" style="color:#ef4444">▸ Elementals & Fire/Water supers · +20% HP in territory</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ VAULT HUNT PANEL ══ -->
+<div id="vault-panel">
+  <div style="width:100%;max-width:480px;padding-bottom:30px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+      <div style="font-size:0.9rem;font-weight:900;letter-spacing:4px;color:#f59e0b;">🏆 VAULT HUNT</div>
+      <button onclick="document.getElementById('vault-panel').style.display='none'" style="background:none;border:none;color:#555;cursor:pointer;font-size:1.2rem;">✕</button>
+    </div>
+    <div style="font-size:0.45rem;color:#555;letter-spacing:2px;margin-bottom:6px;">WEEKLY HIDDEN LEGENDARY — ONE TRAINER CLAIMS IT FOREVER</div>
+    <div id="vault-super-box" style="background:rgba(245,158,11,0.06);border:1px solid #f59e0b33;border-radius:12px;padding:16px;text-align:center;margin-bottom:16px;">
+      <div id="vault-super-icon" style="font-size:3rem;margin-bottom:4px;">🏆</div>
+      <div id="vault-super-name" style="font-size:0.8rem;font-weight:900;color:#fbbf24;letter-spacing:3px;"></div>
+      <div id="vault-super-rarity" style="font-size:0.55rem;color:#f59e0b;margin-top:4px;"></div>
+    </div>
+    <div id="vault-found-by" style="display:none;background:rgba(74,222,128,0.06);border:1px solid #4ade8044;border-radius:10px;padding:12px;text-align:center;margin-bottom:14px;font-size:0.6rem;color:#4ade80;font-weight:900;letter-spacing:2px;"></div>
+    <div style="font-size:0.5rem;letter-spacing:3px;color:#f59e0b;margin-bottom:10px;">📜 THIS WEEK'S CLUES</div>
+    <div id="vault-clues-list"></div>
+    <div style="font-size:0.45rem;color:#555;letter-spacing:1px;margin-top:12px;text-align:center;">New clue unlocks each day · New vault every Monday</div>
+  </div>
+</div>
+
+<div id="vault-found-banner"></div>
+
+<!-- ══ FACTION HUD (in world) ══ -->
+
 <!-- ══ COIN SHOP PANEL ══ -->
 <div id="shop-panel">
   <div style="width:100%;max-width:480px;padding-bottom:30px;">
@@ -10391,6 +10503,430 @@ if(startHint) startHint.innerHTML += '<br>H · Base &nbsp;|&nbsp; 🏆 RANKS but
 </div>
 
 <script>
+// ════════════════════════════════════════════════════════
+// ⚔️ FACTION WARS
+// ════════════════════════════════════════════════════════
+const FACTIONS = {
+  VOLT:   { name:'VOLT ORDER',   icon:'⚡', color:'#facc15', stat:'speed',   bonus:'SPD +20%', type:['energy','speed'] },
+  IRON:   { name:'IRON WALL',    icon:'🛡️', color:'#94a3b8', stat:'defense', bonus:'DEF +20%', type:['strength','defense'] },
+  SHADOW: { name:'SHADOW GUILD', icon:'👁️', color:'#a855f7', stat:'attack',  bonus:'ATK +20%', type:['psychic','speed'] },
+  INFERNO:{ name:'INFERNO PACT', icon:'🔥', color:'#ef4444', stat:'hp',      bonus:'HP +20%',  type:['fire','water'] },
+};
+
+// 9 war zones across the map
+const WAR_ZONES = [
+  { id:'nw', name:'NORTH RIDGE',    x:-50, z:-50, r:28 },
+  { id:'n',  name:'CRYSTAL PEAK',   x:0,   z:-55, r:22 },
+  { id:'ne', name:'STORM CITADEL',  x:50,  z:-50, r:28 },
+  { id:'w',  name:'SHADOW HOLLOW',  x:-55, z:0,   r:22 },
+  { id:'c',  name:'THE NEXUS',      x:0,   z:0,   r:30 },
+  { id:'e',  name:'INFERNO RIDGE',  x:55,  z:0,   r:22 },
+  { id:'sw', name:'ICE SANCTUM',    x:-50, z:50,  r:28 },
+  { id:'s',  name:'VOLT PLAINS',    x:0,   z:55,  r:22 },
+  { id:'se', name:'IRON FORTRESS',  x:50,  z:50,  r:28 },
+];
+
+function getFactionControl(){
+  return JSON.parse(localStorage.getItem('sf_factions_v1') || JSON.stringify(
+    WAR_ZONES.reduce((a,z)=>{ a[z.id]={VOLT:25,IRON:25,SHADOW:25,INFERNO:25}; return a; }, {})
+  ));
+}
+function saveFactionControl(d){ localStorage.setItem('sf_factions_v1', JSON.stringify(d)); }
+
+function getZoneOwner(zoneId){
+  const ctrl = getFactionControl()[zoneId];
+  if(!ctrl) return null;
+  return Object.entries(ctrl).sort((a,b)=>b[1]-a[1])[0][0];
+}
+
+function getCurrentZone(x, z){
+  return WAR_ZONES.find(zone => Math.hypot(x - zone.x, z - zone.z) < zone.r) || null;
+}
+
+function getFactionBonus(){
+  if(!myFaction || !player) return null;
+  const zone = getCurrentZone(player.position.x, player.position.z);
+  if(!zone) return null;
+  const owner = getZoneOwner(zone.id);
+  return owner === myFaction ? FACTIONS[myFaction] : null;
+}
+
+function claimZoneControl(factionKey, points=8){
+  if(!player) return;
+  const zone = getCurrentZone(player.position.x, player.position.z);
+  if(!zone) return;
+  const ctrl = getFactionControl();
+  const z = ctrl[zone.id];
+  // Bleed toward winner — boost winner, drain others
+  Object.keys(z).forEach(f => {
+    if(f === factionKey) z[f] = Math.min(100, z[f] + points);
+    else z[f] = Math.max(0, z[f] - Math.round(points/3));
+  });
+  saveFactionControl(ctrl);
+  updateFactionHud();
+}
+
+function chooseFaction(key){
+  myFaction = key;
+  localStorage.setItem('sf_faction', key);
+  document.getElementById('faction-select').style.display = 'none';
+  launchGame();
+  const f = FACTIONS[key];
+  notify(`${f.icon} You joined ${f.name}! ${f.bonus} in your territory.`, 'good');
+}
+
+function updateFactionHud(){
+  if(!myFaction) return;
+  const f = FACTIONS[myFaction];
+  const hud = document.getElementById('faction-hud');
+  if(!hud) return;
+  hud.style.display = 'flex';
+  hud.style.borderColor = f.color + '66';
+  hud.querySelector('.fh-icon').textContent = f.icon;
+  hud.querySelector('.fh-name').style.color = f.color;
+  hud.querySelector('.fh-name').textContent = f.name;
+  // Check if in own territory
+  if(player){
+    const zone = getCurrentZone(player.position.x, player.position.z);
+    const inOwn = zone && getZoneOwner(zone.id) === myFaction;
+    const bonusEl = hud.querySelector('.fh-bonus');
+    bonusEl.textContent = inOwn ? `✦ ${f.bonus}` : '';
+    bonusEl.style.color = '#4ade80';
+  }
+}
+
+window.openFaction = function(){
+  // Show faction war map as a modal
+  const ctrl = getFactionControl();
+  const html = `
+    <div style="position:fixed;inset:0;background:rgba(0,0,6,0.97);z-index:96;display:flex;flex-direction:column;align-items:center;overflow-y:auto;padding:20px;" id="war-screen">
+      <div style="width:100%;max-width:520px;padding-bottom:30px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+          <div style="font-size:0.9rem;font-weight:900;letter-spacing:4px;color:#a855f7;">⚔️ FACTION WAR</div>
+          <button onclick="document.getElementById('war-screen').remove()" style="background:none;border:none;color:#555;cursor:pointer;font-size:1.2rem;">✕</button>
+        </div>
+        <div style="font-size:0.45rem;color:#555;letter-spacing:2px;margin-bottom:16px;">WIN BATTLES IN EACH ZONE TO CLAIM TERRITORY FOR YOUR FACTION</div>
+        ${Object.entries(FACTIONS).map(([k,f])=>{
+          const totalCtrl = WAR_ZONES.reduce((sum,z)=>{ const c=ctrl[z.id]; return sum+(c?c[k]:0); },0);
+          const maxPossible = WAR_ZONES.length * 100;
+          const pct = Math.round(totalCtrl/maxPossible*100);
+          return `<div style="background:rgba(255,255,255,0.03);border:1px solid ${k===myFaction?f.color+'88':'#1a1a2a'};border-radius:10px;padding:12px 16px;margin-bottom:8px;">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+              <span style="font-size:1.2rem;">${f.icon}</span>
+              <span style="font-size:0.65rem;font-weight:900;color:${f.color};letter-spacing:2px;">${f.name}</span>
+              ${k===myFaction?`<span style="font-size:0.4rem;background:${f.color}22;color:${f.color};border:1px solid ${f.color}55;padding:2px 8px;border-radius:10px;letter-spacing:1px;">YOUR FACTION</span>`:''}
+              <span style="margin-left:auto;font-size:0.55rem;color:${f.color};font-weight:700;">${pct}%</span>
+            </div>
+            <div style="height:6px;background:#111;border-radius:3px;overflow:hidden;">
+              <div style="width:${pct}%;height:100%;background:${f.color};border-radius:3px;transition:width 0.4s;"></div>
+            </div>
+          </div>`;
+        }).join('')}
+        <div style="font-size:0.5rem;letter-spacing:3px;color:#555;margin:16px 0 10px;">🗺️ ZONE CONTROL</div>
+        ${WAR_ZONES.map(zone=>{
+          const c = ctrl[zone.id];
+          const owner = getZoneOwner(zone.id);
+          const of = FACTIONS[owner];
+          const you = getCurrentZone(player?.position?.x||0,player?.position?.z||0)?.id===zone.id;
+          return `<div style="background:rgba(255,255,255,0.02);border:1px solid ${you?of.color+'66':'#1a1a2a'};border-radius:8px;padding:10px 14px;margin-bottom:6px;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;">
+              <span style="font-size:0.6rem;font-weight:900;color:${of.color};">${of.icon} ${zone.name}</span>
+              ${you?'<span style="font-size:0.4rem;color:#4ade80;letter-spacing:1px;">← YOU ARE HERE</span>':''}
+              <span style="margin-left:auto;font-size:0.45rem;color:${of.color};">${of.name}</span>
+            </div>
+            <div style="display:flex;gap:2px;height:4px;border-radius:3px;overflow:hidden;">
+              ${Object.entries(c).map(([f,v])=>`<div style="flex:${v};background:${FACTIONS[f].color};transition:flex 0.4s;"></div>`).join('')}
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+  document.body.insertAdjacentHTML('beforeend', html);
+};
+
+// Hook: claim territory on every battle win
+const _origEndBattle2 = window.endBattle;
+window.endBattle = function(msg){
+  _origEndBattle2(msg);
+  if(msg.winner === myId && myFaction) claimZoneControl(myFaction, 10);
+};
+const _origEndWildBattle2 = window.endWildBattle;
+window.endWildBattle = function(result){
+  _origEndWildBattle2(result);
+  if(result === 'win' && myFaction) claimZoneControl(myFaction, 6);
+};
+
+// Simulate rival faction activity every few minutes
+setInterval(()=>{
+  if(!myFaction) return;
+  const rivals = Object.keys(FACTIONS).filter(f=>f!==myFaction);
+  const f = rivals[Math.floor(Math.random()*rivals.length)];
+  const z = WAR_ZONES[Math.floor(Math.random()*WAR_ZONES.length)];
+  const ctrl = getFactionControl();
+  Object.keys(ctrl[z.id]).forEach(k=>{ if(k===f) ctrl[z.id][k]=Math.min(100,ctrl[z.id][k]+3); else ctrl[z.id][k]=Math.max(0,ctrl[z.id][k]-1); });
+  saveFactionControl(ctrl);
+}, 90000);
+
+// Draw territory on minimap
+const _origDrawMinimap = drawMinimap;
+window.drawMinimap = function(){
+  _origDrawMinimap();
+  if(!myFaction) return;
+  const ctrl = getFactionControl();
+  const scale = 130/120;
+  WAR_ZONES.forEach(zone=>{
+    const owner = getZoneOwner(zone.id);
+    const f = FACTIONS[owner];
+    const mx = 65 + (zone.x - (player?.position?.x||0)) * scale;
+    const my = 65 + (zone.z - (player?.position?.z||0)) * scale;
+    if(mx<0||mx>130||my<0||my>130) return;
+    const rad = zone.r * scale;
+    mmCtx.beginPath();
+    mmCtx.arc(mx, my, rad, 0, Math.PI*2);
+    mmCtx.fillStyle = f.color + '22';
+    mmCtx.fill();
+    mmCtx.strokeStyle = f.color + '66';
+    mmCtx.lineWidth = 1;
+    mmCtx.stroke();
+    mmCtx.font = '8px sans-serif';
+    mmCtx.fillStyle = f.color + 'cc';
+    mmCtx.textAlign = 'center';
+    mmCtx.fillText(f.icon, mx, my+3);
+  });
+};
+
+// Apply faction stat bonus in combat
+const _origProcessWBMove = window.processWildBattleMove;
+window.processWildBattleMove = function(moveIdx, isUltra){
+  const bonus = getFactionBonus();
+  if(bonus && myBattleSuper && !myBattleSuper._factionBoosted){
+    myBattleSuper._factionBoosted = true;
+    if(bonus.stat==='speed')   myBattleSuper.speed   = Math.round((myBattleSuper.speed||50)*1.2);
+    if(bonus.stat==='defense') myBattleSuper.defense = Math.round((myBattleSuper.defense||50)*1.2);
+    if(bonus.stat==='attack')  myBattleSuper.attack  = Math.round((myBattleSuper.attack||50)*1.2);
+    if(bonus.stat==='hp')      myBattleSuper.hp      = Math.min(myBattleSuper.maxHp, myBattleSuper.hp + Math.round(myBattleSuper.maxHp*0.2));
+  }
+  _origProcessWBMove(moveIdx, isUltra);
+};
+
+// Update faction HUD position every 2s
+setInterval(()=>{ if(myFaction) updateFactionHud(); }, 2000);
+
+// ════════════════════════════════════════════════════════
+// 🏆 VAULT HUNT
+// ════════════════════════════════════════════════════════
+const VAULT_LOCATIONS = [
+  { x:60,  z:-60, name:'North Storm Citadel', clues:[
+    'It sleeps where the sky crackles and the towers reach the clouds.',
+    'Look to the northeast corner — where lightning meets silence.',
+    'The power reading is strongest at coordinates far from the center.',
+    'Three trainers reported a golden shimmer in the far north-east.',
+    'It is exactly where the storm biome ends and the crystal ground begins.',
+  ]},
+  { x:-60, z:60,  name:'South Ice Sanctum', clues:[
+    'Ancient trainers called this place "where fire fears to tread."',
+    'Follow the cold — the further south-west you go, the stronger the signal.',
+    'A frozen relic sleeps beneath the ice in the southern reaches.',
+    'The vault glow has been spotted near the dungeon portal in the south.',
+    'Southwest. Past the ice. Under the aurora shimmer.',
+  ]},
+  { x:0,   z:0,   name:'The Nexus', clues:[
+    'It hides in plain sight — the most contested ground on the map.',
+    'The Nexus pulses with energy. Something powerful has awakened there.',
+    'Stand at the very center of the world. Feel the vibration.',
+    'Four factions fight over this ground for a reason beyond territory.',
+    'It is directly beneath the central spawn. Zero. Zero.',
+  ]},
+  { x:55,  z:55,  name:'Iron Fortress', clues:[
+    'South-east. Where iron meets earth and the fortress never fell.',
+    'The strongest signal comes from where the juggernaut supers roam.',
+    'A trainer named it "The Locked Vault" before vanishing east.',
+    'Follow the iron-colored ground. Keep going until it glows.',
+    'Coordinates: positive x, positive z. Far south-east corner.',
+  ]},
+  { x:-55, z:-55, name:'Shadow Hollow', clues:[
+    'It hides where the darkness is deepest — the forgotten hollow.',
+    'North-west. The assassin supers have been circling it for days.',
+    'A psychic super pointed north-west. They never lie.',
+    'Shadow Hollow has been sealed for years. Something just broke the seal.',
+    'Negative x, negative z. As far north-west as you can walk.',
+  ]},
+];
+
+function getWeekSeed(){
+  const d = new Date();
+  const jan1 = new Date(d.getFullYear(), 0, 1);
+  return Math.floor((d - jan1) / 604800000); // week number
+}
+
+function seededRng(seed){
+  let s = seed;
+  return function(){ s = Math.imul(1664525, s) + 1013904223 >>> 0; return s / 0xffffffff; };
+}
+
+function getThisWeekVault(){
+  const seed = getWeekSeed();
+  const rng  = seededRng(seed);
+  const locIdx   = Math.floor(rng() * VAULT_LOCATIONS.length);
+  // Pick from rarity 4+ supers
+  const legendaries = SUPERS.map((s,i)=>({s,i})).filter(x=>(x.s.rarity||1)>=4);
+  const superIdx = legendaries[Math.floor(rng() * legendaries.length)];
+  return { location: VAULT_LOCATIONS[locIdx], superDefIdx: superIdx?.i ?? 0, weekSeed: seed };
+}
+
+function getDayOfWeek(){ return new Date().getDay(); } // 0=Sun,1=Mon,...
+
+function getUnlockedClues(){
+  // Clue 1 unlocks Monday, clue 2 Tuesday, etc.
+  const day = getDayOfWeek();
+  const mon = day === 0 ? 7 : day; // treat Sun as day 7
+  return Math.min(5, Math.max(1, mon));
+}
+
+let vaultChestGrp = null;
+
+function initVaultHunt(){
+  const vault = getThisWeekVault();
+  const foundKey = `sf_vault_found_${vault.weekSeed}`;
+  const foundBy  = localStorage.getItem(foundKey);
+
+  // Spawn glowing chest at vault location
+  const loc = vault.location;
+  const geo = new THREE.BoxGeometry(1.5, 1.5, 1.5);
+  const mat = new THREE.MeshPhongMaterial({ color:0xf59e0b, emissive:0xf59e0b, emissiveIntensity:0.8, transparent:true, opacity:0.9 });
+  const chest = new THREE.Mesh(geo, mat);
+  chest.position.set(loc.x, 0.75, loc.z);
+  const light = new THREE.PointLight(0xf59e0b, 2, 12);
+  light.position.set(loc.x, 3, loc.z);
+  vaultChestGrp = new THREE.Group();
+  vaultChestGrp.add(chest);
+  vaultChestGrp.add(light);
+  scene.add(vaultChestGrp);
+  vaultChestGrp._chest = chest;
+  vaultChestGrp._defIdx = vault.superDefIdx;
+  vaultChestGrp._foundKey = foundKey;
+
+  // If already found this week, dim it
+  if(foundBy){
+    mat.emissiveIntensity = 0.1;
+    mat.opacity = 0.3;
+    light.intensity = 0.3;
+    showVaultFoundBanner(foundBy);
+  } else {
+    // Add minimap blip + notify on first load
+    notify('🏆 This week\'s Vault has been hidden somewhere in the world. Check VAULT HUNT for clues!', 'good');
+  }
+}
+
+function checkVaultProximity(pos){
+  if(!vaultChestGrp) return;
+  const foundKey = vaultChestGrp._foundKey;
+  if(localStorage.getItem(foundKey)) return; // already claimed
+  const cx = vaultChestGrp._chest.position.x;
+  const cz = vaultChestGrp._chest.position.z;
+  const dist = Math.hypot(pos.x - cx, pos.z - cz);
+  if(dist < 4){
+    claimVault();
+  }
+}
+
+function claimVault(){
+  if(!vaultChestGrp) return;
+  const foundKey = vaultChestGrp._foundKey;
+  if(localStorage.getItem(foundKey)) return;
+  localStorage.setItem(foundKey, myName);
+
+  // Explode the chest with particles
+  SFX.levelup();
+  const def = SUPER_DEFS[vaultChestGrp._defIdx];
+  vaultChestGrp.children.forEach(c=>scene.remove(c));
+  scene.remove(vaultChestGrp);
+  vaultChestGrp = null;
+
+  // Award the super
+  const prize = { ...def, maxHp:def.hp, hp:def.hp, level:50, xp:0, status:null, moves:def.moves.map(m=>({...m})), vaultPrize:true };
+  if(team.length < 6) team.push(prize);
+  else superBox.push(prize);
+  saveGame(); saveBox();
+  buildTeamBar();
+
+  addCoins(2000);
+  gainBPassXP(1000);
+
+  // Big announcement
+  showVaultFoundBanner(myName);
+  notify(`🏆 YOU FOUND THE VAULT! ${def.icon} ${def.name} joins your team! +2000 coins!`, 'good');
+  setTimeout(()=>{
+    document.getElementById('evo-anim-overlay').classList.add('active');
+    document.getElementById('evo-anim-icon').textContent = def.icon || '🏆';
+    document.getElementById('evo-anim-text').textContent = '🏆 VAULT CLAIMED!';
+    document.getElementById('evo-anim-name').textContent = def.name + ' — LEGENDARY PRIZE';
+    setTimeout(()=>document.getElementById('evo-anim-overlay').classList.remove('active'), 3000);
+  }, 500);
+}
+
+function showVaultFoundBanner(name){
+  const b = document.getElementById('vault-found-banner');
+  b.textContent = `🏆 VAULT CLAIMED THIS WEEK BY: ${name.toUpperCase()}`;
+  b.style.display = 'block';
+  setTimeout(()=>b.style.display='none', 8000);
+}
+
+window.openVaultPanel = function(){
+  const vault = getThisWeekVault();
+  const def = SUPER_DEFS[vault.superDefIdx];
+  const foundKey = `sf_vault_found_${vault.weekSeed}`;
+  const foundBy  = localStorage.getItem(foundKey);
+
+  document.getElementById('vault-super-icon').textContent = foundBy ? '🔓' : '🏆';
+  document.getElementById('vault-super-name').textContent = foundBy ? def?.name || 'LEGENDARY' : '???';
+  document.getElementById('vault-super-rarity').textContent = foundBy
+    ? '★'.repeat(def?.rarity||5) + ' · LEGENDARY TIER'
+    : 'Legendary · Hidden in the world';
+
+  const foundEl = document.getElementById('vault-found-by');
+  if(foundBy){
+    foundEl.style.display = 'block';
+    foundEl.textContent   = `✅ CLAIMED THIS WEEK BY: ${foundBy.toUpperCase()}`;
+  } else {
+    foundEl.style.display = 'none';
+  }
+
+  const numClues = getUnlockedClues();
+  const list = document.getElementById('vault-clues-list');
+  list.innerHTML = vault.location.clues.map((clue, i)=>{
+    const unlocked = i < numClues;
+    return `<div class="vault-clue${unlocked?'':' locked'}">
+      <div class="vc-day">DAY ${i+1}</div>
+      <div class="vc-text">${unlocked ? clue : '🔒 Unlocks ' + ['Monday','Tuesday','Wednesday','Thursday','Friday'][i]}</div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('vault-panel').style.display = 'flex';
+};
+
+// Hook vault proximity check into the main loop
+const _origDrawMinimapVault = window.drawMinimap;
+window.drawMinimap = function(){
+  _origDrawMinimapVault();
+  if(!vaultChestGrp || !player) return;
+  const foundKey = vaultChestGrp._foundKey;
+  if(localStorage.getItem(foundKey)) return;
+  // Pulse gold dot on minimap
+  const scale = 130/120;
+  const mx = 65 + (vaultChestGrp._chest.position.x - player.position.x)*scale;
+  const my = 65 + (vaultChestGrp._chest.position.z - player.position.z)*scale;
+  if(mx<2||mx>128||my<2||my>128) return;
+  mmCtx.beginPath();
+  mmCtx.arc(mx, my, 5, 0, Math.PI*2);
+  mmCtx.fillStyle = '#f59e0b';
+  mmCtx.fill();
+  mmCtx.font = '8px sans-serif';
+  mmCtx.fillStyle = '#f59e0b';
+  mmCtx.textAlign = 'center';
+  mmCtx.fillText('🏆', mx, my+3);
+};
+
 // ════════════════════════════════════════════════════════
 // 🛒 COIN SHOP
 // ════════════════════════════════════════════════════════
