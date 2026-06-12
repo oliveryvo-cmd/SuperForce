@@ -5114,6 +5114,8 @@ function cleanupWorldBattle(){
   if(wbOppLight){ scene.remove(wbOppLight);wbOppLight=null;}
   wbActive=false;
   wbCamAnimating=false;
+  _disposeMiniSlot('my');
+  _disposeMiniSlot('opp');
 }
 
 // Replace a world super mesh (for switch events)
@@ -5462,70 +5464,88 @@ ${body}
 }
 
 // ── Mini 3D sprite renderer ──────────────────────────────────────────────────
-let _miniRenderer = null;
-function _getMiniRenderer(){
-  if(_miniRenderer) return _miniRenderer;
-  const c = document.createElement('canvas');
-  _miniRenderer = new THREE.WebGLRenderer({canvas:c, alpha:true, antialias:true, preserveDrawingBuffer:true});
-  _miniRenderer.setClearColor(0,0);
-  _miniRenderer.shadowMap.enabled=false;
-  return _miniRenderer;
+const _miniSlots = {}; // 'my' | 'opp' -> { renderer, scene, mesh, cam, rafId }
+
+function _disposeMiniSlot(side){
+  const s = _miniSlots[side];
+  if(!s) return;
+  cancelAnimationFrame(s.rafId);
+  s.scene.traverse(o=>{
+    if(o.isMesh){
+      o.geometry?.dispose();
+      (Array.isArray(o.material)?o.material:[o.material]).forEach(m=>m?.dispose());
+    }
+  });
+  s.renderer.dispose();
+  delete _miniSlots[side];
 }
 
 function renderSuperToSprite(def, bodyEl, isMirror, isEvolved){
-  if(typeof THREE==='undefined'||!bodyEl) return;
-  const W=bodyEl.offsetWidth||190, H=bodyEl.offsetHeight||240;
-  const r=_getMiniRenderer();
-  r.setSize(W,H);
+  if(typeof THREE==='undefined'||!bodyEl||!makeProcMesh) return;
+  const side = isMirror ? 'opp' : 'my';
+  _disposeMiniSlot(side);
 
-  const sc3=new THREE.Scene();
-  const cam3=new THREE.PerspectiveCamera(38, W/H, 0.1, 50);
-  cam3.position.set(isMirror?3.2:-3.2, 2.2, 4.8);
-  cam3.lookAt(0, 1.4, 0);
+  // Build dedicated canvas directly in the body element
+  bodyEl.innerHTML = '';
+  const canvas = document.createElement('canvas');
+  canvas.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;display:block;';
+  bodyEl.appendChild(canvas);
 
-  sc3.add(new THREE.AmbientLight(0xffffff, 0.55));
-  const col=parseInt((def.color||'#8888ff').replace('#',''),16);
-  const key=new THREE.DirectionalLight(col, isEvolved?2.5:1.6); key.position.set(isMirror?-3:3,4,3); sc3.add(key);
-  const fill=new THREE.DirectionalLight(0xffffff,0.4); fill.position.set(0,2,-3); sc3.add(fill);
+  const renderer = new THREE.WebGLRenderer({canvas, alpha:true, antialias:true});
+  renderer.setClearColor(0, 0);
+  renderer.shadowMap.enabled = false;
+
+  const scene3 = new THREE.Scene();
+  scene3.add(new THREE.AmbientLight(0xffffff, 0.65));
+  const colHex = def.color || TYPE_COLORS[def.type] || '#8888ff';
+  const colInt = parseInt(colHex.replace('#',''), 16);
+  const key = new THREE.DirectionalLight(colInt, isEvolved ? 2.8 : 1.8);
+  key.position.set(isMirror ? -3 : 3, 4, 3); scene3.add(key);
+  const fill = new THREE.DirectionalLight(0xffffff, 0.5); fill.position.set(0, 2, -2); scene3.add(fill);
   if(isEvolved){
-    const ev=new THREE.PointLight(0xa855f7,3,8); ev.position.set(0,2,2); sc3.add(ev);
-    const ev2=new THREE.PointLight(col,2,6); ev2.position.set(isMirror?-1:1,1,1); sc3.add(ev2);
+    const ev = new THREE.PointLight(0xa855f7, 3, 8); ev.position.set(0, 2, 2); scene3.add(ev);
   }
 
-  const defC={...def, color:def.color||(TYPE_COLORS[def.type]||'#8888ff')};
-  const mesh=makeProcMesh(defC);
-  mesh.rotation.y=isMirror?Math.PI+0.3:-0.3;
-
+  const defC = {...def, color: colHex};
+  const mesh = makeProcMesh(defC);
+  mesh.rotation.y = isMirror ? Math.PI + 0.25 : -0.25;
   if(isEvolved){
-    mesh.traverse(c=>{
-      if(c.isMesh&&c.material){
-        const m=c.material.clone();
-        m.emissive=new THREE.Color(0xa855f7);
-        m.emissiveIntensity=0.7;
-        c.material=m;
+    mesh.scale.setScalar(1.2);
+    mesh.traverse(o=>{
+      if(o.isMesh && o.material){
+        const m = o.material.clone();
+        m.emissive = new THREE.Color(0xa855f7);
+        m.emissiveIntensity = 0.65;
+        o.material = m;
       }
     });
-    mesh.scale.setScalar(1.25);
-    mesh.position.y=-0.3;
   }
+  scene3.add(mesh);
 
-  sc3.add(mesh);
-  r.render(sc3,cam3);
+  const cam3 = new THREE.PerspectiveCamera(38, 1, 0.1, 50);
+  cam3.position.set(0, 1.9, 5.2);
+  cam3.lookAt(0, 1.3, 0);
 
-  // Stamp onto a persistent canvas in the body element
-  let stamp=bodyEl.querySelector('canvas.mini3d');
-  if(!stamp){
-    stamp=document.createElement('canvas');
-    stamp.className='mini3d';
-    stamp.style.cssText='position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;';
-    bodyEl.innerHTML='';
-    bodyEl.appendChild(stamp);
+  let t = 0;
+  function loop(){
+    const id = requestAnimationFrame(loop);
+    if(!_miniSlots[side]){ cancelAnimationFrame(id); return; }
+    _miniSlots[side].rafId = id;
+    // Resize to match element each frame (handles layout changes)
+    const W = canvas.clientWidth || bodyEl.clientWidth || 190;
+    const H = canvas.clientHeight || bodyEl.clientHeight || 240;
+    if(W > 4 && H > 4 && (renderer.domElement.width !== W || renderer.domElement.height !== H)){
+      renderer.setSize(W, H, false);
+      cam3.aspect = W / H;
+      cam3.updateProjectionMatrix();
+    }
+    t += 0.016;
+    mesh.position.y = Math.sin(t * 1.4) * 0.07;
+    mesh.rotation.y = (isMirror ? Math.PI : 0) + Math.sin(t * 0.4) * 0.12 + (isMirror ? 0.25 : -0.25);
+    renderer.render(scene3, cam3);
   }
-  stamp.width=W; stamp.height=H;
-  stamp.getContext('2d').drawImage(r.domElement,0,0);
-
-  // Cleanup temporary scene
-  sc3.traverse(o=>{if(o.isMesh){o.geometry?.dispose();if(Array.isArray(o.material))o.material.forEach(m=>m.dispose());else o.material?.dispose();}});
+  _miniSlots[side] = { renderer, scene: scene3, mesh, cam: cam3, rafId: 0 };
+  loop();
 }
 
 function renderBattleSides(){
