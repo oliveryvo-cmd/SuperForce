@@ -5188,9 +5188,9 @@ function getArchetypeSVG(arch, color){
 
   const defs = `<defs>
   <linearGradient id="fg${u}" x1="18%" y1="0%" x2="82%" y2="100%">
-    <stop offset="0%" stop-color="${c}" stop-opacity="0.95"/>
-    <stop offset="50%" stop-color="${c}" stop-opacity="0.72"/>
-    <stop offset="100%" stop-color="${c}" stop-opacity="0.28"/>
+    <stop offset="0%" stop-color="${c}" stop-opacity="0.98"/>
+    <stop offset="50%" stop-color="${c}" stop-opacity="0.88"/>
+    <stop offset="100%" stop-color="${c}" stop-opacity="0.72"/>
   </linearGradient>
   <linearGradient id="rl${u}" x1="0%" y1="0%" x2="100%" y2="0%">
     <stop offset="0%" stop-color="#fff" stop-opacity="0.28"/>
@@ -5213,7 +5213,8 @@ function getArchetypeSVG(arch, color){
 
   const body = `
 <ellipse cx="50" cy="112" rx="34" ry="78" fill="url(#au${u})"/>
-<path d="M50,5 C43,5 37,9 35,15 C33,21 34,28 37,32 C39,36 43,38 46,39 C47,40 48,40 50,40 C52,40 53,40 54,39 C57,38 61,36 63,32 C66,28 67,21 65,15 C63,9 57,5 50,5 Z" fill="#1c0f30"/>
+<path d="M50,5 C43,5 37,9 35,15 C33,21 34,28 37,32 C39,36 43,38 46,39 C47,40 48,40 50,40 C52,40 53,40 54,39 C57,38 61,36 63,32 C66,28 67,21 65,15 C63,9 57,5 50,5 Z" fill="#f0c8a0"/>
+<path d="M50,5 C43,5 37,9 35,15 C33,21 34,28 37,32 C39,36 43,38 46,39 C47,40 48,40 50,40 C52,40 53,40 54,39 C57,38 61,36 63,32 C66,28 67,21 65,15 C63,9 57,5 50,5 Z" fill="url(#sh${u})" fill-opacity="0.3"/>
 <path d="M43,37 C42,40 42,43 43,46 L57,46 C58,43 58,40 57,37 Z" fill="url(#fg${u})"/>
 <line x1="46" y1="37" x2="46" y2="46" stroke="#000" stroke-width="0.5" stroke-opacity="0.18"/>
 <line x1="54" y1="37" x2="54" y2="46" stroke="#000" stroke-width="0.5" stroke-opacity="0.18"/>
@@ -5262,7 +5263,7 @@ ${body}
 <line x1="33" y1="21.5" x2="28" y2="21.5" stroke="#cc6600" stroke-width="2.2"/>
 <line x1="67" y1="21.5" x2="72" y2="21.5" stroke="#cc6600" stroke-width="2.2"/>
 <!-- Determined mouth -->
-<path d="M44,32 Q50,35.5 56,32" fill="none" stroke="#aaa" stroke-width="0.9" stroke-opacity="0.65"/>
+<path d="M44,32 Q50,35.5 56,32" fill="none" stroke="#8b4513" stroke-width="1.1" stroke-opacity="0.7" stroke-linecap="round"/>
 <!-- Lightning bolt chest emblem -->
 <polygon points="53,57 46,73 52,73 46,91 58,73 52,73 58,57" fill="${c}" fill-opacity="0.9" filter="url(#gw${u})"/>
 <!-- Circuit arm lines -->
@@ -5313,8 +5314,8 @@ ${body}
 <ellipse cx="59" cy="22.5" rx="2" ry="2.5" fill="#111"/>
 <ellipse cx="57.8" cy="21" rx="0.9" ry="1" fill="white"/>
 <!-- Nose + set jaw -->
-<line x1="50" y1="24" x2="50" y2="29" stroke="#000" stroke-width="0.7" stroke-opacity="0.3"/>
-<path d="M44,32 L56,32" fill="none" stroke="#aaa" stroke-width="1.2" stroke-opacity="0.6" stroke-linecap="round"/>
+<line x1="50" y1="24" x2="50" y2="29" stroke="#8b4513" stroke-width="0.8" stroke-opacity="0.5"/>
+<path d="M44,32 L56,32" fill="none" stroke="#8b4513" stroke-width="1.2" stroke-opacity="0.7" stroke-linecap="round"/>
 <!-- Wide shoulder armor plates -->
 <rect x="7" y="44" width="20" height="13" rx="2.5" fill="${c}" fill-opacity="0.3" stroke="${c}" stroke-width="0.9"/>
 <rect x="73" y="44" width="20" height="13" rx="2.5" fill="${c}" fill-opacity="0.3" stroke="${c}" stroke-width="0.9"/>
@@ -5438,8 +5439,8 @@ ${body}
 <path d="M54,13 Q59,11 64,13" fill="none" stroke="${c}" stroke-width="1.3" stroke-linecap="round"/>
 <ellipse cx="59" cy="20" rx="6" ry="6" fill="${c}" fill-opacity="0.12"><animate attributeName="fill-opacity" values="0.12;0.38;0.12" dur="1.2s" begin="0.4s" repeatCount="indefinite"/></ellipse>
 <!-- Nose + serene mouth -->
-<line x1="50" y1="22" x2="50" y2="27" stroke="#000" stroke-width="0.6" stroke-opacity="0.25"/>
-<path d="M45,31 Q50,34.5 55,31" fill="none" stroke="#fff" stroke-width="0.8" stroke-opacity="0.5"/>
+<line x1="50" y1="22" x2="50" y2="27" stroke="#8b4513" stroke-width="0.7" stroke-opacity="0.45"/>
+<path d="M45,31 Q50,34.5 55,31" fill="none" stroke="#8b4513" stroke-width="0.9" stroke-opacity="0.6" stroke-linecap="round"/>
 <!-- Elemental rune circle on chest -->
 <circle cx="50" cy="72" r="13" fill="none" stroke="${c}" stroke-width="0.8" stroke-opacity="0.48"/>
 <circle cx="50" cy="72" r="8" fill="none" stroke="${c}" stroke-width="0.65" stroke-opacity="0.58"/>
@@ -5460,6 +5461,73 @@ ${body}
 </svg>`;
 }
 
+// ── Mini 3D sprite renderer ──────────────────────────────────────────────────
+let _miniRenderer = null;
+function _getMiniRenderer(){
+  if(_miniRenderer) return _miniRenderer;
+  const c = document.createElement('canvas');
+  _miniRenderer = new THREE.WebGLRenderer({canvas:c, alpha:true, antialias:true, preserveDrawingBuffer:true});
+  _miniRenderer.setClearColor(0,0);
+  _miniRenderer.shadowMap.enabled=false;
+  return _miniRenderer;
+}
+
+function renderSuperToSprite(def, bodyEl, isMirror, isEvolved){
+  if(typeof THREE==='undefined'||!bodyEl) return;
+  const W=bodyEl.offsetWidth||190, H=bodyEl.offsetHeight||240;
+  const r=_getMiniRenderer();
+  r.setSize(W,H);
+
+  const sc3=new THREE.Scene();
+  const cam3=new THREE.PerspectiveCamera(38, W/H, 0.1, 50);
+  cam3.position.set(isMirror?3.2:-3.2, 2.2, 4.8);
+  cam3.lookAt(0, 1.4, 0);
+
+  sc3.add(new THREE.AmbientLight(0xffffff, 0.55));
+  const col=parseInt((def.color||'#8888ff').replace('#',''),16);
+  const key=new THREE.DirectionalLight(col, isEvolved?2.5:1.6); key.position.set(isMirror?-3:3,4,3); sc3.add(key);
+  const fill=new THREE.DirectionalLight(0xffffff,0.4); fill.position.set(0,2,-3); sc3.add(fill);
+  if(isEvolved){
+    const ev=new THREE.PointLight(0xa855f7,3,8); ev.position.set(0,2,2); sc3.add(ev);
+    const ev2=new THREE.PointLight(col,2,6); ev2.position.set(isMirror?-1:1,1,1); sc3.add(ev2);
+  }
+
+  const defC={...def, color:def.color||(TYPE_COLORS[def.type]||'#8888ff')};
+  const mesh=makeProcMesh(defC);
+  mesh.rotation.y=isMirror?Math.PI+0.3:-0.3;
+
+  if(isEvolved){
+    mesh.traverse(c=>{
+      if(c.isMesh&&c.material){
+        const m=c.material.clone();
+        m.emissive=new THREE.Color(0xa855f7);
+        m.emissiveIntensity=0.7;
+        c.material=m;
+      }
+    });
+    mesh.scale.setScalar(1.25);
+    mesh.position.y=-0.3;
+  }
+
+  sc3.add(mesh);
+  r.render(sc3,cam3);
+
+  // Stamp onto a persistent canvas in the body element
+  let stamp=bodyEl.querySelector('canvas.mini3d');
+  if(!stamp){
+    stamp=document.createElement('canvas');
+    stamp.className='mini3d';
+    stamp.style.cssText='position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;';
+    bodyEl.innerHTML='';
+    bodyEl.appendChild(stamp);
+  }
+  stamp.width=W; stamp.height=H;
+  stamp.getContext('2d').drawImage(r.domElement,0,0);
+
+  // Cleanup temporary scene
+  sc3.traverse(o=>{if(o.isMesh){o.geometry?.dispose();if(Array.isArray(o.material))o.material.forEach(m=>m.dispose());else o.material?.dispose();}});
+}
+
 function renderBattleSides(){
   const myS=myBattleSuper, oppS=oppBattleSuper;
   if(!myS||!oppS) return;
@@ -5467,7 +5535,7 @@ function renderBattleSides(){
 
   const ARCHETYPES={'electric':'super-speedster','steel':'super-juggernaut','earth':'super-juggernaut','dark':'super-assassin','poison':'super-assassin','fire':'super-elemental','ice':'super-elemental','water':'super-elemental','magic':'super-elemental'};
   const ALL_ARCHETYPES=['super-speedster','super-juggernaut','super-assassin','super-elemental'];
-  const buildSpriteHTML=(s)=>`<div class="combatant-halo"></div><div class="combatant-body">${getArchetypeSVG(ARCHETYPES[s.type]||'super-speedster',col(s))}</div><div class="combatant-icon">${s.icon||'❓'}</div>`;
+  const buildSpriteHTML=(s)=>`<div class="combatant-halo"></div><div class="combatant-body"></div><div class="combatant-icon">${s.icon||'❓'}</div>`;
   function applyArchetype(el,s){
     ALL_ARCHETYPES.forEach(c=>el.classList.remove(c));
     const arch=ARCHETYPES[s.type];
@@ -5479,6 +5547,8 @@ function renderBattleSides(){
   myEl.style.color=col(myS);
   myEl.style.borderColor=col(myS);
   myEl.style.boxShadow=`0 0 30px ${col(myS)},0 0 60px ${col(myS)},inset 0 0 20px rgba(255,255,255,0.05)`;
+  const myDefRender={...myS,color:col(myS)};
+  setTimeout(()=>renderSuperToSprite(myDefRender,myEl.querySelector('.combatant-body'),false,!!myS._ultraEvolved),30);
   const STATUS_BADGE={burn:'🔥 BURNED',poison:'☠️ POISONED',stun:'⚡ STUNNED',freeze:'🧊 FROZEN',weaken:'📉 WEAKENED',shield:'🛡️ SHIELDED'};
   const STATUS_COLOR={burn:'#f97316',poison:'#a855f7',stun:'#facc15',freeze:'#7dd3fc',weaken:'#94a3b8',shield:'#4ade80'};
   function statusBadgeHTML(s){if(!s||!s.type)return'';const c=STATUS_COLOR[s.type]||'#aaa';return`<span class="status-badge" style="background:${c}22;color:${c};border:1px solid ${c}55">${STATUS_BADGE[s.type]||s.type.toUpperCase()}</span>`;}
@@ -5508,6 +5578,8 @@ function renderBattleSides(){
   oppEl.style.color=col(oppS);
   oppEl.style.borderColor=col(oppS);
   oppEl.style.boxShadow=`0 0 30px ${col(oppS)},0 0 60px ${col(oppS)},inset 0 0 20px rgba(255,255,255,0.05)`;
+  const oppDefRender={...oppS,color:col(oppS)};
+  setTimeout(()=>renderSuperToSprite(oppDefRender,oppEl.querySelector('.combatant-body'),true,false),50);
   document.getElementById('opp-name').innerHTML=oppS.name+statusBadgeHTML(oppS.status);
   document.getElementById('opp-level').textContent=`Lv.${oppS.level}`;
   document.getElementById('opp-type').textContent=oppS.type.toUpperCase();
@@ -6640,8 +6712,17 @@ function drawMinimap(){
     if(!def) return;
     const mx=65+(w.grp.position.x-pos.x)*scale, my=65+(w.grp.position.z-pos.z)*scale;
     if(mx<2||mx>128||my<2||my>128) return;
-    mmCtx.fillStyle=w.isHopewarrior?'#fffde7':def.color;
-    mmCtx.beginPath(); mmCtx.arc(mx,my,w.isHopewarrior?5:3,0,Math.PI*2); mmCtx.fill();
+    const r=w.isHopewarrior?6:4;
+    // Glow ring
+    mmCtx.beginPath(); mmCtx.arc(mx,my,r+2,0,Math.PI*2);
+    mmCtx.fillStyle=(w.isHopewarrior?'#fffde7':def.color)+'44'; mmCtx.fill();
+    // Solid dot
+    mmCtx.beginPath(); mmCtx.arc(mx,my,r,0,Math.PI*2);
+    mmCtx.fillStyle=w.isHopewarrior?'#fffde7':def.color; mmCtx.fill();
+    // Emoji icon above dot
+    mmCtx.font=`${w.isHopewarrior?9:8}px serif`;
+    mmCtx.textAlign='center'; mmCtx.textBaseline='bottom';
+    mmCtx.fillText(w.isHopewarrior?'🌟':(def.icon||'❓'), mx, my-r);
   });
   // Remote players
   remotePlayers.forEach(rp=>{
@@ -8384,8 +8465,33 @@ function triggerUltraEvolution(){
     const sprite = document.getElementById('my-sprite');
     if(sprite){
       sprite.classList.add('ultra-evolved-sprite');
-      sprite.style.borderColor  = col;
+      sprite.style.borderColor  = '#a855f7';
       sprite.style.transform    = 'scale(1.15)';
+      sprite.style.boxShadow    = '0 0 40px #a855f7, 0 0 80px #7c3aed88, inset 0 0 30px rgba(168,85,247,0.2)';
+      // Re-render 3D sprite as evolved form
+      const bodyEl = sprite.querySelector('.combatant-body');
+      if(bodyEl) renderSuperToSprite({...myBattleSuper,color:col}, bodyEl, false, true);
+    }
+    // Transform the world battle mesh too
+    if(wbMyMesh){
+      // Scale up with pulse
+      const origScale = wbMyMesh.scale.x;
+      wbMyMesh.traverse(c=>{
+        if(c.isMesh && c.material){
+          const m = c.material.clone();
+          m.emissive = new THREE.Color(0xa855f7);
+          m.emissiveIntensity = 0.8;
+          c.material = m;
+        }
+      });
+      let t3=0;
+      const pulse3 = setInterval(()=>{
+        t3+=0.1;
+        const sc = origScale * (1.35 + Math.sin(t3*8)*0.08*(1-Math.min(t3/2,1)));
+        wbMyMesh.scale.setScalar(sc);
+        if(t3>2){ wbMyMesh.scale.setScalar(origScale*1.35); clearInterval(pulse3); }
+      },16);
+      if(wbMyLight){ wbMyLight.color.setHex(0xa855f7); wbMyLight.intensity=6; }
     }
     const nameDisp = document.getElementById('my-name');
     if(nameDisp) nameDisp.textContent = ultraName;
