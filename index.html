@@ -5191,165 +5191,257 @@ function updateWbHud(){
 function getArchetypeSVG(arch, color){
   const c = color||'#88aaff';
   const u = (Math.random()*1e6|0).toString(36);
+  const sk='#f2c190', sk2='#c8845a';
+  const hc='#120e22', hl='#3a2860';
+  const suit='#0e0e20', s2='#1c1c38', s3='#282854';
 
-  /* Archetype armor detail overlays */
-  const overlays = {
-    'super-speedster':`
-      <path d="M38,56 L44,50 L56,50 L62,56 L56,62 L44,62 Z" fill="none" stroke="${c}" stroke-width="0.8" stroke-opacity="0.55"/>
-      <circle cx="50" cy="56" r="2.5" fill="${c}" fill-opacity="0.7"/>
-      <line x1="16" y1="60" x2="6" y2="82" stroke="${c}" stroke-width="1.2" stroke-opacity="0.5"/>
-      <line x1="84" y1="60" x2="94" y2="82" stroke="${c}" stroke-width="1.2" stroke-opacity="0.5"/>
-      <line x1="28" y1="178" x2="40" y2="184" stroke="${c}" stroke-width="1.2" stroke-opacity="0.6"/>
-      <line x1="72" y1="178" x2="60" y2="184" stroke="${c}" stroke-width="1.2" stroke-opacity="0.6"/>`,
-    'super-juggernaut':`
-      <rect x="10" y="44" width="16" height="10" rx="2" fill="${c}" fill-opacity="0.28" stroke="${c}" stroke-width="0.7" stroke-opacity="0.7"/>
-      <rect x="74" y="44" width="16" height="10" rx="2" fill="${c}" fill-opacity="0.28" stroke="${c}" stroke-width="0.7" stroke-opacity="0.7"/>
-      <rect x="30" y="50" width="40" height="38" rx="2" fill="none" stroke="${c}" stroke-width="0.7" stroke-opacity="0.4"/>
-      <line x1="50" y1="50" x2="50" y2="88" stroke="${c}" stroke-width="0.6" stroke-opacity="0.4"/>
-      <rect x="32" y="88" width="36" height="14" rx="1" fill="${c}" fill-opacity="0.12" stroke="${c}" stroke-width="0.5" stroke-opacity="0.35"/>
-      <circle cx="34" cy="54" r="2" fill="${c}" fill-opacity="0.65"/>
-      <circle cx="66" cy="54" r="2" fill="${c}" fill-opacity="0.65"/>
-      <circle cx="34" cy="86" r="2" fill="${c}" fill-opacity="0.65"/>
-      <circle cx="66" cy="86" r="2" fill="${c}" fill-opacity="0.65"/>
-      <rect x="27" y="163" width="16" height="10" rx="2" fill="${c}" fill-opacity="0.35" stroke="${c}" stroke-width="0.7" stroke-opacity="0.6"/>
-      <rect x="57" y="163" width="16" height="10" rx="2" fill="${c}" fill-opacity="0.35" stroke="${c}" stroke-width="0.7" stroke-opacity="0.6"/>`,
-    'super-assassin':`
-      <path d="M34,42 Q50,49 66,42" fill="none" stroke="${c}" stroke-width="1.1" stroke-opacity="0.55"/>
-      <line x1="50" y1="42" x2="50" y2="104" stroke="${c}" stroke-width="0.7" stroke-opacity="0.5" stroke-dasharray="4,3"/>
-      <path d="M1,112 L0,136 L8,133 L8,112 Z" fill="${c}" fill-opacity="0.65" stroke="${c}" stroke-width="0.5"/>
-      <line x1="15" y1="46" x2="10" y2="55" stroke="${c}" stroke-width="1.6" stroke-opacity="0.8"/>
-      <line x1="85" y1="46" x2="90" y2="55" stroke="${c}" stroke-width="1.6" stroke-opacity="0.8"/>
-      <line x1="27" y1="130" x2="47" y2="126" stroke="${c}" stroke-width="0.8" stroke-opacity="0.45"/>
-      <line x1="27" y1="139" x2="47" y2="135" stroke="${c}" stroke-width="0.8" stroke-opacity="0.45"/>
-      <line x1="53" y1="126" x2="73" y2="130" stroke="${c}" stroke-width="0.8" stroke-opacity="0.45"/>
-      <line x1="53" y1="135" x2="73" y2="139" stroke="${c}" stroke-width="0.8" stroke-opacity="0.45"/>`,
-    'super-elemental':`
-      <ellipse cx="50" cy="104" rx="44" ry="86" fill="none" stroke="${c}" stroke-width="0.8" stroke-opacity="0.18"/>
-      <circle cx="50" cy="66" r="20" fill="none" stroke="${c}" stroke-width="0.7" stroke-opacity="0.38"/>
-      <circle cx="50" cy="66" r="11" fill="none" stroke="${c}" stroke-width="0.5" stroke-opacity="0.45"/>
-      <line x1="50" y1="46" x2="50" y2="86" stroke="${c}" stroke-width="0.5" stroke-opacity="0.32"/>
-      <line x1="30" y1="66" x2="70" y2="66" stroke="${c}" stroke-width="0.5" stroke-opacity="0.32"/>
-      <path d="M2,120 Q-4,110 3,100 Q10,90 5,78" fill="none" stroke="${c}" stroke-width="1.2" stroke-opacity="0.6"/>
-      <path d="M98,120 Q104,110 97,100 Q90,90 95,78" fill="none" stroke="${c}" stroke-width="1.2" stroke-opacity="0.6"/>
-      <polygon points="50,22 57,33 43,33" fill="none" stroke="${c}" stroke-width="0.8" stroke-opacity="0.65"/>`
-  };
-  const overlay = overlays[arch]||overlays['super-speedster'];
+  if(arch==='super-speedster') return `<svg viewBox="0 0 100 210" xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:0;left:0;width:100%;height:100%">
+<defs><radialGradient id="a${u}" cx="50%" cy="45%" r="55%"><stop offset="0%" stop-color="${c}" stop-opacity="0.28"/><stop offset="100%" stop-color="${c}" stop-opacity="0"/></radialGradient></defs>
+<ellipse cx="50" cy="115" rx="44" ry="88" fill="url(#a${u})"/>
+<line x1="0" y1="78" x2="22" y2="74" stroke="${c}" stroke-width="2" stroke-opacity="0.55" stroke-linecap="round"/>
+<line x1="0" y1="92" x2="18" y2="90" stroke="${c}" stroke-width="1.2" stroke-opacity="0.4" stroke-linecap="round"/>
+<line x1="0" y1="106" x2="24" y2="104" stroke="${c}" stroke-width="1.8" stroke-opacity="0.5" stroke-linecap="round"/>
+<line x1="0" y1="120" x2="16" y2="119" stroke="${c}" stroke-width="0.9" stroke-opacity="0.35" stroke-linecap="round"/>
+<line x1="0" y1="136" x2="20" y2="134" stroke="${c}" stroke-width="1.4" stroke-opacity="0.45" stroke-linecap="round"/>
+<polyline points="85,65 92,74 87,78 95,87" fill="none" stroke="${c}" stroke-width="1.8" stroke-opacity="0.7" stroke-linejoin="round"/>
+<polyline points="80,90 87,97 83,101 89,110" fill="none" stroke="${c}" stroke-width="1.2" stroke-opacity="0.5" stroke-linejoin="round"/>
+<path d="M54,138 C56,150 58,162 59,174 C60,182 59,190 57,196" stroke="${suit}" stroke-width="14" stroke-linecap="round" fill="none"/>
+<path d="M54,138 C56,150 58,162 59,174" stroke="${s2}" stroke-width="8" stroke-linecap="round" fill="none"/>
+<path d="M46,136 C42,148 38,161 36,173 C35,181 35,190 37,197" stroke="${s2}" stroke-width="15" stroke-linecap="round" fill="none"/>
+<path d="M46,136 C42,148 38,161 36,173" stroke="${s3}" stroke-width="9" stroke-linecap="round" fill="none"/>
+<circle cx="40" cy="162" r="4" fill="${s3}" stroke="${c}" stroke-width="0.8" stroke-opacity="0.7"/>
+<circle cx="57" cy="168" r="3.5" fill="${s3}" stroke="${c}" stroke-width="0.7" stroke-opacity="0.6"/>
+<path d="M32,195 C28,198 27,202 29,205 C31,207 37,208 43,208 C48,208 51,206 51,203 C51,200 49,197 46,196 Z" fill="${c}" fill-opacity="0.85"/>
+<path d="M52,194 C54,197 56,201 55,204 C54,206 57,208 61,207 C64,206 65,204 63,201 C62,198 60,195 57,195 Z" fill="${c}" fill-opacity="0.75"/>
+<path d="M27,105 C25,96 26,86 28,79 C31,71 37,68 50,67 C63,68 69,71 72,79 C74,86 75,96 73,105 Q60,113 50,114 Q40,113 27,105 Z" fill="${suit}"/>
+<path d="M41,71 L50,69 L59,71 L57,92 L50,95 L43,92 Z" fill="${s3}"/>
+<polygon points="51,75 47,84 51,84 47,93" fill="${c}" fill-opacity="0.9"/>
+<path d="M27,79 C24,78 22,82 24,86 C26,88 29,88 30,86 Z" fill="${c}" fill-opacity="0.6"/>
+<path d="M73,79 C76,78 78,82 76,86 C74,88 71,88 70,86 Z" fill="${c}" fill-opacity="0.6"/>
+<line x1="32" y1="78" x2="30" y2="110" stroke="${c}" stroke-width="1.2" stroke-opacity="0.35"/>
+<line x1="68" y1="78" x2="70" y2="110" stroke="${c}" stroke-width="1.2" stroke-opacity="0.35"/>
+<path d="M72,73 C78,76 84,82 86,90 C88,97 87,104 84,108" stroke="${suit}" stroke-width="12" stroke-linecap="round" fill="none"/>
+<path d="M82,106 C84,112 83,118 80,121" stroke="${suit}" stroke-width="9" stroke-linecap="round" fill="none"/>
+<ellipse cx="77" cy="124" rx="6" ry="5" fill="${sk}" stroke="${c}" stroke-width="0.9"/>
+<ellipse cx="77" cy="122" rx="4" ry="2.5" fill="${c}" fill-opacity="0.5"/>
+<path d="M28,73 C22,76 17,84 16,93 C15,100 16,107 20,111" stroke="${s2}" stroke-width="12" stroke-linecap="round" fill="none"/>
+<path d="M18,109 C16,115 16,122 18,127" stroke="${s2}" stroke-width="9" stroke-linecap="round" fill="none"/>
+<ellipse cx="19" cy="130" rx="6" ry="5" fill="${sk}"/>
+<path d="M13,128 L12,133" stroke="${sk2}" stroke-width="1.2" stroke-linecap="round"/>
+<path d="M16,127 L15,132" stroke="${sk2}" stroke-width="1.2" stroke-linecap="round"/>
+<path d="M19,127 L18,132" stroke="${sk2}" stroke-width="1.2" stroke-linecap="round"/>
+<ellipse cx="16" cy="130" rx="5" ry="4" fill="${c}" fill-opacity="0.3"/>
+<rect x="44" y="62" width="12" height="7" rx="2" fill="${sk}"/>
+<path d="M36,52 C34,45 34,36 36,28 C38,22 43,17 50,16 C57,17 62,22 64,28 C66,36 66,45 64,52 L57,57 L50,59 L43,57 Z" fill="${hc}"/>
+<path d="M38,34 C33,26 28,20 22,15 L30,22 C26,18 24,14 26,10 L34,18 C31,13 33,8 36,6 L42,16 C41,10 44,5 47,4 L50,14 C51,7 54,4 56,5 L56,15 C59,9 63,8 65,11 L60,20" fill="${hc}"/>
+<path d="M40,22 C44,18 50,16 56,20" fill="none" stroke="${hl}" stroke-width="1" stroke-opacity="0.5"/>
+<path d="M37,50 C36,44 36,37 38,32 C40,27 44,24 50,24 C56,24 60,27 62,32 C64,37 64,44 63,50 C61,55 57,58 53,59 C51,59.5 49,59.5 47,59 C43,58 39,55 37,50 Z" fill="${sk}"/>
+<path d="M37,40 C36,36 36,32 38,29" stroke="${sk2}" stroke-width="4" stroke-opacity="0.2" fill="none"/>
+<path d="M36,35 L48,33 L48,42 L36,43 Z" fill="#0a0a18" stroke="${c}" stroke-width="1.2"/>
+<path d="M52,33 L64,35 L63,43 L52,42 Z" fill="#0a0a18" stroke="${c}" stroke-width="1.2"/>
+<line x1="48" y1="38" x2="52" y2="38" stroke="${c}" stroke-width="1.2"/>
+<ellipse cx="42" cy="38" rx="5" ry="4" fill="${c}" fill-opacity="0.35"/>
+<ellipse cx="58" cy="38" rx="5" ry="4" fill="${c}" fill-opacity="0.35"/>
+<line x1="38" y1="35" x2="40" y2="37" stroke="white" stroke-width="1" stroke-opacity="0.7"/>
+<line x1="54" y1="34" x2="56" y2="36" stroke="white" stroke-width="1" stroke-opacity="0.7"/>
+<path d="M45,52 Q50,55 54,52" fill="none" stroke="${sk2}" stroke-width="0.9" stroke-linecap="round"/>
+<path d="M36,43 C34,43 33,46 34,49 C35,51 37,51 38,49 C38,47 37,44 36,43 Z" fill="${sk}" stroke="${sk2}" stroke-width="0.5"/>
+<line x1="37" y1="32" x2="63" y2="32" stroke="${c}" stroke-width="0.8" stroke-opacity="0.5"/>
+</svg>`;
+
+  if(arch==='super-juggernaut') return `<svg viewBox="0 0 100 210" xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:0;left:0;width:100%;height:100%">
+<defs><radialGradient id="a${u}" cx="50%" cy="50%" r="55%"><stop offset="0%" stop-color="${c}" stop-opacity="0.2"/><stop offset="100%" stop-color="${c}" stop-opacity="0"/></radialGradient></defs>
+<ellipse cx="50" cy="115" rx="48" ry="92" fill="url(#a${u})"/>
+<ellipse cx="50" cy="202" rx="38" ry="6" fill="none" stroke="${c}" stroke-width="1.5" stroke-opacity="0.5"/>
+<ellipse cx="50" cy="202" rx="26" ry="4" fill="none" stroke="${c}" stroke-width="1" stroke-opacity="0.35"/>
+<circle cx="15" cy="90" r="2.5" fill="${c}" fill-opacity="0.7"/>
+<circle cx="85" cy="85" r="2" fill="${c}" fill-opacity="0.6"/>
+<circle cx="12" cy="130" r="1.8" fill="${c}" fill-opacity="0.5"/>
+<circle cx="88" cy="125" r="2.2" fill="${c}" fill-opacity="0.65"/>
+<path d="M32,145 C30,155 29,166 30,177 C30,185 31,192 33,198" stroke="${suit}" stroke-width="17" stroke-linecap="round" fill="none"/>
+<path d="M32,145 C30,155 29,166 30,177" stroke="${s2}" stroke-width="11" stroke-linecap="round" fill="none"/>
+<path d="M68,145 C70,155 71,166 70,177 C70,185 69,192 67,198" stroke="${suit}" stroke-width="17" stroke-linecap="round" fill="none"/>
+<path d="M68,145 C70,155 71,166 70,177" stroke="${s2}" stroke-width="11" stroke-linecap="round" fill="none"/>
+<rect x="23" y="163" width="16" height="10" rx="2" fill="${s3}" stroke="${c}" stroke-width="1.2"/>
+<circle cx="31" cy="168" r="2.5" fill="${c}" fill-opacity="0.8"/>
+<rect x="61" y="163" width="16" height="10" rx="2" fill="${s3}" stroke="${c}" stroke-width="1.2"/>
+<circle cx="69" cy="168" r="2.5" fill="${c}" fill-opacity="0.8"/>
+<path d="M17,196 C13,198 12,202 14,206 C16,208 24,209 32,209 C37,209 40,207 40,204 C40,201 37,198 33,197 Z" fill="${s3}" stroke="${c}" stroke-width="0.8"/>
+<path d="M83,196 C87,198 88,202 86,206 C84,208 76,209 68,209 C63,209 60,207 60,204 C60,201 63,198 67,197 Z" fill="${s3}" stroke="${c}" stroke-width="0.8"/>
+<line x1="18" y1="202" x2="39" y2="202" stroke="${c}" stroke-width="1" stroke-opacity="0.6"/>
+<line x1="61" y1="202" x2="82" y2="202" stroke="${c}" stroke-width="1" stroke-opacity="0.6"/>
+<path d="M10,115 C8,106 8,96 10,86 C12,76 18,70 28,66 L50,63 L72,66 C82,70 88,76 90,86 C92,96 92,106 90,115 Q70,124 50,125 Q30,124 10,115 Z" fill="${suit}"/>
+<path d="M25,72 L50,68 L75,72 L72,102 L50,107 L28,102 Z" fill="${s3}"/>
+<circle cx="50" cy="85" r="9" fill="${s2}" stroke="${c}" stroke-width="1.5"/>
+<circle cx="50" cy="85" r="6" fill="${c}" fill-opacity="0.4"/>
+<circle cx="50" cy="85" r="3" fill="${c}" fill-opacity="0.8"/>
+<line x1="35" y1="72" x2="35" y2="104" stroke="${c}" stroke-width="0.7" stroke-opacity="0.4"/>
+<line x1="65" y1="72" x2="65" y2="104" stroke="${c}" stroke-width="0.7" stroke-opacity="0.4"/>
+<line x1="28" y1="90" x2="72" y2="90" stroke="${c}" stroke-width="0.7" stroke-opacity="0.35"/>
+<circle cx="36" cy="73" r="1.2" fill="${c}" fill-opacity="0.7"/>
+<circle cx="64" cy="73" r="1.2" fill="${c}" fill-opacity="0.7"/>
+<circle cx="36" cy="103" r="1.2" fill="${c}" fill-opacity="0.7"/>
+<circle cx="64" cy="103" r="1.2" fill="${c}" fill-opacity="0.7"/>
+<path d="M10,80 C5,78 2,83 3,90 C4,96 9,100 14,99 C18,98 21,94 20,88 C19,83 15,80 10,80 Z" fill="${s3}" stroke="${c}" stroke-width="1.2"/>
+<path d="M90,80 C95,78 98,83 97,90 C96,96 91,100 86,99 C82,98 79,94 80,88 C81,83 85,80 90,80 Z" fill="${s3}" stroke="${c}" stroke-width="1.2"/>
+<circle cx="8" cy="88" r="2.5" fill="${c}" fill-opacity="0.6"/>
+<circle cx="92" cy="88" r="2.5" fill="${c}" fill-opacity="0.6"/>
+<path d="M10,95 C6,100 4,110 5,120 C6,128 10,133 16,133" stroke="${suit}" stroke-width="16" stroke-linecap="round" fill="none"/>
+<path d="M10,95 C6,100 4,110 5,120" stroke="${s3}" stroke-width="10" stroke-linecap="round" fill="none"/>
+<rect x="0" y="130" width="20" height="16" rx="4" fill="${s3}" stroke="${c}" stroke-width="1.2"/>
+<line x1="0" y1="137" x2="20" y2="137" stroke="${c}" stroke-width="0.7" stroke-opacity="0.5"/>
+<circle cx="5" cy="133" r="1.5" fill="${c}" fill-opacity="0.6"/>
+<circle cx="5" cy="141" r="1.5" fill="${c}" fill-opacity="0.6"/>
+<rect x="0" y="130" width="20" height="16" rx="4" fill="${c}" fill-opacity="0.2"/>
+<path d="M90,95 C94,100 96,110 95,120 C94,128 90,133 84,133" stroke="${suit}" stroke-width="16" stroke-linecap="round" fill="none"/>
+<path d="M90,95 C94,100 96,110 95,120" stroke="${s3}" stroke-width="10" stroke-linecap="round" fill="none"/>
+<rect x="80" y="130" width="20" height="16" rx="4" fill="${s3}" stroke="${c}" stroke-width="1.2"/>
+<line x1="80" y1="137" x2="100" y2="137" stroke="${c}" stroke-width="0.7" stroke-opacity="0.5"/>
+<circle cx="95" cy="133" r="1.5" fill="${c}" fill-opacity="0.6"/>
+<circle cx="95" cy="141" r="1.5" fill="${c}" fill-opacity="0.6"/>
+<rect x="80" y="130" width="20" height="16" rx="4" fill="${c}" fill-opacity="0.2"/>
+<rect x="41" y="57" width="18" height="8" rx="2" fill="${sk}"/>
+<path d="M33,48 C30,38 30,28 33,21 C36,14 42,10 50,10 C58,10 64,14 67,21 C70,28 70,38 67,48" fill="${hc}"/>
+<path d="M44,25 C42,18 43,11 45,8 C46,11 46,18 46,25 Z" fill="${hc}"/>
+<path d="M50,24 C48,16 49,9 50,6 C51,9 52,16 50,24 Z" fill="${hc}"/>
+<path d="M56,25 C54,18 55,11 55,8 C57,11 57,18 57,25 Z" fill="${hc}"/>
+<path d="M33,48 C31,43 31,34 32,27 C34,20 38,16 44,15 C46,15 48,14 50,14 C52,14 54,15 56,15 C62,16 66,20 68,27 C69,34 69,43 67,48 C65,53 60,57 55,58 C53,59 51,59 49,59 C47,59 45,59 45,58 C40,57 35,53 33,48 Z" fill="${sk}"/>
+<path d="M33,40 C32,36 32,30 34,25" stroke="${sk2}" stroke-width="4" stroke-opacity="0.25" fill="none"/>
+<path d="M35,28 L44,26" stroke="${hc}" stroke-width="2.5" stroke-linecap="round"/>
+<path d="M56,26 L65,28" stroke="${hc}" stroke-width="2.5" stroke-linecap="round"/>
+<path d="M36,31 L44,30 L44,35 L36,36 Z" fill="#0d0d20" stroke="${c}" stroke-width="0.7"/>
+<path d="M56,30 L64,31 L65,36 L56,35 Z" fill="#0d0d20" stroke="${c}" stroke-width="0.7"/>
+<ellipse cx="40" cy="33" rx="2.5" ry="2.5" fill="${c}" fill-opacity="0.9"/>
+<ellipse cx="60" cy="33" rx="2.5" ry="2.5" fill="${c}" fill-opacity="0.9"/>
+<circle cx="41" cy="32" r="1" fill="white" fill-opacity="0.5"/>
+<circle cx="61" cy="32" r="1" fill="white" fill-opacity="0.5"/>
+<path d="M48,38 Q50,42 52,38" fill="none" stroke="${sk2}" stroke-width="1" stroke-linecap="round"/>
+<path d="M41,49 L59,49" stroke="${sk2}" stroke-width="1.2" stroke-linecap="round"/>
+<line x1="45" y1="49" x2="45" y2="51" stroke="${sk2}" stroke-width="0.8"/>
+<line x1="50" y1="49" x2="50" y2="51" stroke="${sk2}" stroke-width="0.8"/>
+<line x1="55" y1="49" x2="55" y2="51" stroke="${sk2}" stroke-width="0.8"/>
+<path d="M32,36 C29,36 28,39 29,43 C30,46 33,46 34,43 C35,40 34,36 32,36 Z" fill="${sk}" stroke="${sk2}" stroke-width="0.5"/>
+<path d="M68,36 C71,36 72,39 71,43 C70,46 67,46 66,43 C65,40 66,36 68,36 Z" fill="${sk}" stroke="${sk2}" stroke-width="0.5"/>
+<line x1="36" y1="27" x2="40" y2="32" stroke="${sk2}" stroke-width="0.7" stroke-opacity="0.6"/>
+</svg>`;
+
+  if(arch==='super-assassin') return `<svg viewBox="0 0 100 210" xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:0;left:0;width:100%;height:100%">
+<defs><radialGradient id="a${u}" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="${c}" stop-opacity="0.2"/><stop offset="100%" stop-color="${c}" stop-opacity="0"/></radialGradient></defs>
+<ellipse cx="50" cy="115" rx="44" ry="88" fill="url(#a${u})"/>
+<path d="M5,100 Q15,90 10,80 Q20,85 15,72" fill="none" stroke="${c}" stroke-width="1.5" stroke-opacity="0.5" stroke-linecap="round"/>
+<path d="M95,108 Q82,98 87,86 Q78,92 83,78" fill="none" stroke="${c}" stroke-width="1.2" stroke-opacity="0.4" stroke-linecap="round"/>
+<path d="M8,140 Q18,128 12,118" fill="none" stroke="${c}" stroke-width="1" stroke-opacity="0.35" stroke-linecap="round"/>
+<path d="M36,135 C34,125 34,110 38,98 C40,92 44,85 50,82 C56,85 60,92 62,98 C66,110 66,125 64,135 Q56,140 50,141 Q44,140 36,135 Z" fill="${c}" fill-opacity="0.07"/>
+<path d="M40,145 C37,158 35,170 35,182 C35,190 36,196 38,200" stroke="${suit}" stroke-width="13" stroke-linecap="round" fill="none"/>
+<path d="M40,145 C37,158 35,170 35,182" stroke="${s2}" stroke-width="8" stroke-linecap="round" fill="none"/>
+<path d="M60,145 C62,158 64,170 64,182 C64,190 63,196 61,200" stroke="${suit}" stroke-width="13" stroke-linecap="round" fill="none"/>
+<path d="M60,145 C62,158 64,170 64,182" stroke="${s2}" stroke-width="8" stroke-linecap="round" fill="none"/>
+<path d="M32,175 C31,178 31,184 33,188" stroke="${c}" stroke-width="2" stroke-opacity="0.6" stroke-linecap="round"/>
+<path d="M62,175 C62,178 62,184 63,188" stroke="${c}" stroke-width="2" stroke-opacity="0.6" stroke-linecap="round"/>
+<path d="M30,198 C27,200 26,203 28,205 C30,207 35,207 40,207 C44,207 46,205 46,202 C46,199 44,197 41,197 Z" fill="${s3}" stroke="${c}" stroke-width="0.7"/>
+<path d="M54,197 C57,197 60,199 60,202 C60,205 62,207 66,207 C70,207 72,205 70,203 C68,200 66,198 63,198 Z" fill="${s3}" stroke="${c}" stroke-width="0.7"/>
+<path d="M30,110 C28,101 28,92 30,84 C32,76 37,71 50,70 C63,71 68,76 70,84 C72,92 72,101 70,110 Q60,117 50,118 Q40,117 30,110 Z" fill="${suit}"/>
+<line x1="50" y1="70" x2="50" y2="115" stroke="${c}" stroke-width="0.8" stroke-opacity="0.5"/>
+<path d="M35,80 L50,85 L65,80" fill="none" stroke="${c}" stroke-width="1" stroke-opacity="0.5"/>
+<path d="M38,85 L50,90 L62,85" fill="none" stroke="${c}" stroke-width="0.7" stroke-opacity="0.4"/>
+<path d="M36,74 L50,72 L64,74 L62,100 L50,104 L38,100 Z" fill="${c}" fill-opacity="0.08" stroke="${c}" stroke-width="0.5" stroke-opacity="0.3"/>
+<rect x="22" y="108" width="3" height="18" rx="1" fill="${c}" fill-opacity="0.9"/>
+<path d="M23.5,126 L20,132 L23.5,130 L27,132 Z" fill="${c}"/>
+<rect x="21" y="108" width="5" height="3" rx="1" fill="#888888"/>
+<rect x="75" y="108" width="3" height="18" rx="1" fill="${c}" fill-opacity="0.9"/>
+<path d="M76.5,126 L73,132 L76.5,130 L80,132 Z" fill="${c}"/>
+<rect x="74" y="108" width="5" height="3" rx="1" fill="#888888"/>
+<path d="M30,78 C25,82 21,90 21,98 C21,105 24,110 28,112" stroke="${suit}" stroke-width="11" stroke-linecap="round" fill="none"/>
+<path d="M21,98 C20,105 21,112 24,116" stroke="${suit}" stroke-width="8" stroke-linecap="round" fill="none"/>
+<ellipse cx="24" cy="119" rx="5" ry="4" fill="${sk}"/>
+<path d="M70,78 C75,82 79,90 79,98 C79,105 76,110 72,112" stroke="${suit}" stroke-width="11" stroke-linecap="round" fill="none"/>
+<path d="M79,98 C80,105 79,112 76,116" stroke="${suit}" stroke-width="8" stroke-linecap="round" fill="none"/>
+<ellipse cx="76" cy="119" rx="5" ry="4" fill="${sk}"/>
+<rect x="44" y="64" width="12" height="7" rx="2" fill="${sk}"/>
+<path d="M30,56 C26,50 25,40 26,30 C28,20 35,13 50,12 C65,13 72,20 74,30 C75,40 74,50 70,56 C68,60 62,64 56,65 L50,66 L44,65 C38,64 32,60 30,56 Z" fill="${hc}"/>
+<path d="M33,56 C30,52 28,44 30,34 C32,24 38,18 50,17 C62,18 68,24 70,34 C72,44 70,52 67,56 L60,62 L50,64 L40,62 Z" fill="#080818"/>
+<line x1="35" y1="42" x2="30" y2="56" stroke="${hc}" stroke-width="1" stroke-opacity="0.5"/>
+<line x1="65" y1="42" x2="70" y2="56" stroke="${hc}" stroke-width="1" stroke-opacity="0.5"/>
+<path d="M33,46 L67,46 L67,60 Q58,65 50,65 Q42,65 33,60 Z" fill="#0c0c1e" stroke="${c}" stroke-width="0.7" stroke-opacity="0.6"/>
+<line x1="38" y1="52" x2="62" y2="52" stroke="${c}" stroke-width="0.6" stroke-opacity="0.4"/>
+<line x1="40" y1="57" x2="60" y2="57" stroke="${c}" stroke-width="0.5" stroke-opacity="0.3"/>
+<path d="M34,36 L46,34 L46,41 L34,43 Z" fill="#0d0d20"/>
+<path d="M54,34 L66,36 L65,43 L54,41 Z" fill="#0d0d20"/>
+<line x1="35" y1="38" x2="45" y2="37" stroke="${c}" stroke-width="2.5" stroke-opacity="0.9"/>
+<line x1="55" y1="37" x2="65" y2="38" stroke="${c}" stroke-width="2.5" stroke-opacity="0.9"/>
+<line x1="35" y1="38" x2="45" y2="37" stroke="${c}" stroke-width="5" stroke-opacity="0.2"/>
+<line x1="55" y1="37" x2="65" y2="38" stroke="${c}" stroke-width="5" stroke-opacity="0.2"/>
+</svg>`;
 
   return `<svg viewBox="0 0 100 210" xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:0;left:0;width:100%;height:100%">
 <defs>
-  <linearGradient id="fg${u}" x1="18%" y1="0%" x2="82%" y2="100%">
-    <stop offset="0%" stop-color="${c}" stop-opacity="0.95"/>
-    <stop offset="50%" stop-color="${c}" stop-opacity="0.72"/>
-    <stop offset="100%" stop-color="${c}" stop-opacity="0.28"/>
-  </linearGradient>
-  <linearGradient id="rl${u}" x1="0%" y1="0%" x2="100%" y2="0%">
-    <stop offset="0%" stop-color="#fff" stop-opacity="0.28"/>
-    <stop offset="30%" stop-color="#fff" stop-opacity="0.1"/>
-    <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
-  </linearGradient>
-  <linearGradient id="sh${u}" x1="100%" y1="0%" x2="0%" y2="0%">
-    <stop offset="0%" stop-color="#000" stop-opacity="0.38"/>
-    <stop offset="55%" stop-color="#000" stop-opacity="0"/>
-  </linearGradient>
+  <radialGradient id="a${u}" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="${c}" stop-opacity="0.35"/><stop offset="100%" stop-color="${c}" stop-opacity="0"/></radialGradient>
+  <radialGradient id="orb${u}" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="${c}" stop-opacity="0.9"/><stop offset="100%" stop-color="${c}" stop-opacity="0.2"/></radialGradient>
 </defs>
-
-<!-- ambient glow -->
-<ellipse cx="50" cy="112" rx="34" ry="78" fill="${c}" fill-opacity="0.07"/>
-
-<!-- ── HEAD — proper oval, wider at cheeks, jaw taper ── -->
-<path d="M50,5 C43,5 37,9 35,15 C33,21 34,28 37,32 C39,36 43,38 46,39 C47,40 48,40 50,40 C52,40 53,40 54,39 C57,38 61,36 63,32 C66,28 67,21 65,15 C63,9 57,5 50,5 Z" fill="url(#fg${u})"/>
-<path d="M50,5 C43,5 37,9 35,15 C33,21 34,28 37,32 C39,36 43,38 46,39 C47,40 48,40 50,40 C52,40 53,40 54,39 C57,38 61,36 63,32 C66,28 67,21 65,15 C63,9 57,5 50,5 Z" fill="url(#rl${u})"/>
-<path d="M50,5 C43,5 37,9 35,15 C33,21 34,28 37,32 C39,36 43,38 46,39 C47,40 48,40 50,40 C52,40 53,40 54,39 C57,38 61,36 63,32 C66,28 67,21 65,15 C63,9 57,5 50,5 Z" fill="url(#sh${u})"/>
-<!-- brow ridge -->
-<path d="M38,18 Q43,15 48,17" fill="none" stroke="#fff" stroke-width="0.9" stroke-opacity="0.3"/>
-<path d="M52,17 Q57,15 62,18" fill="none" stroke="#fff" stroke-width="0.9" stroke-opacity="0.3"/>
-<!-- mouth -->
-<path d="M44,30 Q50,33 56,30" fill="none" stroke="#fff" stroke-width="0.7" stroke-opacity="0.22"/>
-<!-- nose shadow -->
-<line x1="50" y1="22" x2="50" y2="28" stroke="#000" stroke-width="0.6" stroke-opacity="0.2"/>
-
-<!-- ── NECK — tapered, visible cords ── -->
-<path d="M43,37 C42,40 42,43 43,46 L57,46 C58,43 58,40 57,37 Z" fill="url(#fg${u})"/>
-<line x1="46" y1="37" x2="46" y2="46" stroke="#000" stroke-width="0.5" stroke-opacity="0.18"/>
-<line x1="54" y1="37" x2="54" y2="46" stroke="#000" stroke-width="0.5" stroke-opacity="0.18"/>
-
-<!-- ── TORSO — broad shoulders → waist pinch → hip flare ── -->
-<path d="
-  M19,46 C14,48 11,53 11,59 C11,64 14,68 18,70
-  C17,78 17,86 18,93 C19,98 22,102 27,104
-  Q38,108 50,109 Q62,108 73,104
-  C78,102 81,98 82,93 C83,86 83,78 82,70
-  C86,68 89,64 89,59 C89,53 86,48 81,46
-  C74,43 63,41 50,41 C37,41 26,43 19,46 Z
-" fill="url(#fg${u})"/>
-<path d="
-  M19,46 C14,48 11,53 11,59 C11,64 14,68 18,70
-  C17,78 17,86 18,93 C19,98 22,102 27,104
-  Q38,108 50,109 Q62,108 73,104
-  C78,102 81,98 82,93 C83,86 83,78 82,70
-  C86,68 89,64 89,59 C89,53 86,48 81,46
-  C74,43 63,41 50,41 C37,41 26,43 19,46 Z
-" fill="url(#rl${u})"/>
-<path d="
-  M19,46 C14,48 11,53 11,59 C11,64 14,68 18,70
-  C17,78 17,86 18,93 C19,98 22,102 27,104
-  Q38,108 50,109 Q62,108 73,104
-  C78,102 81,98 82,93 C83,86 83,78 82,70
-  C86,68 89,64 89,59 C89,53 86,48 81,46
-  C74,43 63,41 50,41 C37,41 26,43 19,46 Z
-" fill="url(#sh${u})"/>
-<!-- pec line -->
-<path d="M30,60 Q50,66 70,60" fill="none" stroke="#fff" stroke-width="0.6" stroke-opacity="0.14"/>
-<!-- ab lines -->
-<line x1="50" y1="68" x2="50" y2="106" stroke="#000" stroke-width="0.5" stroke-opacity="0.22"/>
-<path d="M38,78 Q50,80 62,78" fill="none" stroke="#000" stroke-width="0.5" stroke-opacity="0.2"/>
-<path d="M37,90 Q50,92 63,90" fill="none" stroke="#000" stroke-width="0.5" stroke-opacity="0.2"/>
-
-<!-- ── LEFT UPPER ARM — bicep bulge ── -->
-<path d="M13,57 C8,59 5,65 4,73 C3,81 5,88 9,92 C12,95 16,95 19,93 C21,91 22,87 22,80 C22,72 21,65 18,60 Z" fill="url(#fg${u})"/>
-<!-- ── RIGHT UPPER ARM ── -->
-<path d="M87,57 C92,59 95,65 96,73 C97,81 95,88 91,92 C88,95 84,95 81,93 C79,91 78,87 78,80 C78,72 79,65 82,60 Z" fill="url(#fg${u})"/>
-<path d="M87,57 C92,59 95,65 96,73 C97,81 95,88 91,92 C88,95 84,95 81,93 C79,91 78,87 78,80 C78,72 79,65 82,60 Z" fill="url(#sh${u})"/>
-
-<!-- ── LEFT FOREARM — tapers to wrist ── -->
-<path d="M7,90 C5,95 4,104 5,112 C6,118 9,122 13,123 C17,124 20,121 21,116 C22,110 22,101 20,93 Z" fill="url(#fg${u})"/>
-<!-- ── RIGHT FOREARM ── -->
-<path d="M93,90 C95,95 96,104 95,112 C94,118 91,122 87,123 C83,124 80,121 79,116 C78,110 78,101 80,93 Z" fill="url(#fg${u})"/>
-<path d="M93,90 C95,95 96,104 95,112 C94,118 91,122 87,123 C83,124 80,121 79,116 C78,110 78,101 80,93 Z" fill="url(#sh${u})"/>
-
-<!-- ── HANDS — fist shape ── -->
-<path d="M5,121 C4,124 4,129 7,131 C10,133 14,133 17,131 C20,129 21,126 20,122 C19,119 16,117 13,117 C9,117 6,118 5,121 Z" fill="url(#fg${u})"/>
-<path d="M95,121 C96,124 96,129 93,131 C90,133 86,133 83,131 C80,129 79,126 80,122 C81,119 84,117 87,117 C91,117 94,118 95,121 Z" fill="url(#fg${u})"/>
-<path d="M95,121 C96,124 96,129 93,131 C90,133 86,133 83,131 C80,129 79,126 80,122 C81,119 84,117 87,117 C91,117 94,118 95,121 Z" fill="url(#sh${u})"/>
-
-<!-- ── PELVIS — hip shelf ── -->
-<path d="M25,107 Q50,114 75,107 L72,122 Q50,128 28,122 Z" fill="url(#fg${u})"/>
-
-<!-- ── LEFT THIGH — quad mass ── -->
-<path d="M28,120 C23,122 20,130 20,140 C20,150 22,158 27,163 C31,167 37,167 41,164 C45,161 47,154 47,144 C47,134 45,126 41,121 C38,118 32,118 28,120 Z" fill="url(#fg${u})"/>
-<!-- ── RIGHT THIGH ── -->
-<path d="M72,120 C77,122 80,130 80,140 C80,150 78,158 73,163 C69,167 63,167 59,164 C55,161 53,154 53,144 C53,134 55,126 59,121 C62,118 68,118 72,120 Z" fill="url(#fg${u})"/>
-<path d="M72,120 C77,122 80,130 80,140 C80,150 78,158 73,163 C69,167 63,167 59,164 C55,161 53,154 53,144 C53,134 55,126 59,121 C62,118 68,118 72,120 Z" fill="url(#sh${u})"/>
-
-<!-- ── KNEES — kneecap oval ── -->
-<path d="M21,160 C20,164 21,170 24,173 C28,176 35,176 39,173 C43,170 44,164 43,160 C40,163 36,165 33,165 C30,165 23,163 21,160 Z" fill="url(#fg${u})"/>
-<path d="M79,160 C80,164 79,170 76,173 C72,176 65,176 61,173 C57,170 56,164 57,160 C60,163 64,165 67,165 C70,165 77,163 79,160 Z" fill="url(#fg${u})"/>
-
-<!-- ── LEFT SHIN — calf swell then taper ── -->
-<path d="M21,170 C20,176 20,184 22,191 C24,196 27,199 32,200 C36,201 40,199 42,195 C44,191 44,184 43,176 C41,170 38,166 34,165 C30,165 22,167 21,170 Z" fill="url(#fg${u})"/>
-<!-- ── RIGHT SHIN ── -->
-<path d="M79,170 C80,176 80,184 78,191 C76,196 73,199 68,200 C64,201 60,199 58,195 C56,191 56,184 57,176 C59,170 62,166 66,165 C70,165 78,167 79,170 Z" fill="url(#fg${u})"/>
-<path d="M79,170 C80,176 80,184 78,191 C76,196 73,199 68,200 C64,201 60,199 58,195 C56,191 56,184 57,176 C59,170 62,166 66,165 C70,165 78,167 79,170 Z" fill="url(#sh${u})"/>
-
-<!-- ── FEET — shoe profile ── -->
-<path d="M20,197 C18,199 17,202 18,205 C19,207 22,208 28,209 C35,210 42,209 46,207 C49,205 49,202 46,199 C44,197 41,196 37,196 Z" fill="url(#fg${u})"/>
-<path d="M80,197 C82,199 83,202 82,205 C81,207 78,208 72,209 C65,210 58,209 54,207 C51,205 51,202 54,199 C56,197 59,196 63,196 Z" fill="url(#fg${u})"/>
-<path d="M80,197 C82,199 83,202 82,205 C81,207 78,208 72,209 C65,210 58,209 54,207 C51,205 51,202 54,199 C56,197 59,196 63,196 Z" fill="url(#sh${u})"/>
-
-<!-- ── ARCHETYPE OVERLAY ── -->
-${overlay}
+<ellipse cx="50" cy="100" rx="48" ry="90" fill="url(#a${u})"/>
+<ellipse cx="50" cy="105" rx="44" ry="86" fill="none" stroke="${c}" stroke-width="0.8" stroke-opacity="0.3"/>
+<ellipse cx="50" cy="105" rx="30" ry="58" fill="none" stroke="${c}" stroke-width="0.5" stroke-opacity="0.2"/>
+<circle cx="15" cy="80" r="5" fill="url(#orb${u})"/>
+<circle cx="85" cy="95" r="4.5" fill="url(#orb${u})"/>
+<circle cx="10" cy="125" r="4" fill="url(#orb${u})"/>
+<circle cx="90" cy="135" r="4" fill="url(#orb${u})"/>
+<circle cx="50" cy="22" r="3.5" fill="url(#orb${u})"/>
+<line x1="15" y1="76" x2="15" y2="84" stroke="${c}" stroke-width="0.8"/>
+<line x1="11" y1="80" x2="19" y2="80" stroke="${c}" stroke-width="0.8"/>
+<line x1="85" y1="91" x2="85" y2="99" stroke="${c}" stroke-width="0.8"/>
+<line x1="81" y1="95" x2="89" y2="95" stroke="${c}" stroke-width="0.8"/>
+<path d="M28,120 C22,135 18,155 19,175 C19,188 22,198 26,205 L50,207 L74,205 C78,198 81,188 81,175 C82,155 78,135 72,120 Q60,128 50,129 Q40,128 28,120 Z" fill="${suit}"/>
+<path d="M35,125 C31,140 29,158 30,174 C30,184 32,193 35,200 L50,202 L65,200 C68,193 70,184 70,174 C71,158 69,140 65,125 Q57,131 50,132 Q43,131 35,125 Z" fill="${s2}"/>
+<path d="M38,132 C37,145 38,162 40,177" fill="none" stroke="${c}" stroke-width="0.8" stroke-opacity="0.3"/>
+<path d="M50,134 C50,148 50,165 50,180" fill="none" stroke="${c}" stroke-width="0.8" stroke-opacity="0.3"/>
+<path d="M62,132 C63,145 62,162 60,177" fill="none" stroke="${c}" stroke-width="0.8" stroke-opacity="0.3"/>
+<path d="M26,204 Q50,207 74,204" fill="none" stroke="${c}" stroke-width="1.2" stroke-opacity="0.6"/>
+<circle cx="50" cy="95" r="10" fill="none" stroke="${c}" stroke-width="1" stroke-opacity="0.7"/>
+<circle cx="50" cy="95" r="6" fill="none" stroke="${c}" stroke-width="0.7" stroke-opacity="0.5"/>
+<line x1="50" y1="82" x2="50" y2="108" stroke="${c}" stroke-width="0.7" stroke-opacity="0.5"/>
+<line x1="37" y1="95" x2="63" y2="95" stroke="${c}" stroke-width="0.7" stroke-opacity="0.5"/>
+<line x1="41" y1="84" x2="59" y2="106" stroke="${c}" stroke-width="0.5" stroke-opacity="0.4"/>
+<line x1="59" y1="84" x2="41" y2="106" stroke="${c}" stroke-width="0.5" stroke-opacity="0.4"/>
+<path d="M20,82 C12,88 7,98 5,110 C3,120 5,128 10,132 C14,134 18,132 20,128 C22,123 21,114 22,105 C23,96 24,88 28,82 Z" fill="${suit}"/>
+<path d="M5,114 C6,120 9,127 13,130" fill="none" stroke="${c}" stroke-width="1.5" stroke-opacity="0.5"/>
+<ellipse cx="8" cy="133" rx="6" ry="4" fill="${sk}"/>
+<ellipse cx="8" cy="133" rx="7" ry="5" fill="${c}" fill-opacity="0.3"/>
+<circle cx="6" cy="131" r="2" fill="${c}" fill-opacity="0.6"/>
+<path d="M80,82 C88,88 93,98 95,110 C97,120 95,128 90,132 C86,134 82,132 80,128 C78,123 79,114 78,105 C77,96 76,88 72,82 Z" fill="${suit}"/>
+<path d="M95,114 C94,120 91,127 87,130" fill="none" stroke="${c}" stroke-width="1.5" stroke-opacity="0.5"/>
+<ellipse cx="92" cy="133" rx="6" ry="4" fill="${sk}"/>
+<ellipse cx="92" cy="133" rx="7" ry="5" fill="${c}" fill-opacity="0.3"/>
+<circle cx="94" cy="131" r="2" fill="${c}" fill-opacity="0.6"/>
+<path d="M30,82 C28,75 29,67 32,62 C36,57 42,54 50,54 C58,54 64,57 68,62 C71,67 72,75 70,82 Q60,90 50,91 Q40,90 30,82 Z" fill="${suit}"/>
+<path d="M30,82 Q50,88 70,82" fill="none" stroke="${c}" stroke-width="1.5" stroke-opacity="0.5"/>
+<rect x="45" y="50" width="10" height="6" rx="2" fill="${sk}"/>
+<path d="M33,52 C28,40 28,28 32,20 C36,12 43,8 50,8 C57,8 64,12 68,20 C72,28 72,40 67,52" fill="${hc}"/>
+<path d="M34,40 C28,30 24,18 27,8 C30,12 34,22 35,32 Z" fill="${hc}"/>
+<path d="M36,30 C30,18 30,8 33,2 C36,8 38,18 38,28 Z" fill="${hc}"/>
+<path d="M42,22 C38,12 40,4 44,0 C45,6 45,14 45,22 Z" fill="${hc}"/>
+<path d="M50,20 C48,10 50,2 50,0 C52,2 52,10 52,20 Z" fill="${hc}"/>
+<path d="M58,22 C60,12 62,4 60,0 C58,6 57,14 57,22 Z" fill="${hc}"/>
+<path d="M64,30 C70,18 72,8 69,2 C66,8 63,18 64,28 Z" fill="${hc}"/>
+<path d="M66,40 C72,30 76,18 73,8 C70,12 66,22 65,32 Z" fill="${hc}"/>
+<path d="M44,6 C46,3 50,0 54,6" fill="none" stroke="${c}" stroke-width="1" stroke-opacity="0.5"/>
+<path d="M35,52 C33,46 33,38 35,30 C37,24 42,20 50,20 C58,20 63,24 65,30 C67,38 67,46 65,52 C63,58 57,62 52,63 C51,63 49,63 48,63 C43,62 37,58 35,52 Z" fill="${sk}"/>
+<ellipse cx="50" cy="44" rx="14" ry="18" fill="${c}" fill-opacity="0.08"/>
+<path d="M36,38 L46,36 L46,43 L36,44 Z" fill="#080818"/>
+<path d="M54,36 L64,38 L64,44 L54,43 Z" fill="#080818"/>
+<ellipse cx="41" cy="40" rx="5" ry="3.5" fill="${c}" fill-opacity="0.85"/>
+<ellipse cx="59" cy="40" rx="5" ry="3.5" fill="${c}" fill-opacity="0.85"/>
+<ellipse cx="41" cy="40" rx="7" ry="5" fill="${c}" fill-opacity="0.25"/>
+<ellipse cx="59" cy="40" rx="7" ry="5" fill="${c}" fill-opacity="0.25"/>
+<circle cx="43" cy="38" r="1.2" fill="white" fill-opacity="0.7"/>
+<circle cx="61" cy="38" r="1.2" fill="white" fill-opacity="0.7"/>
+<path d="M49,48 Q50,50 51,48" fill="none" stroke="${sk2}" stroke-width="0.7"/>
+<path d="M44,56 Q50,59 56,56" fill="none" stroke="${sk2}" stroke-width="0.9" stroke-linecap="round"/>
+<path d="M46,27 L50,24 L54,27" fill="none" stroke="${c}" stroke-width="1" stroke-opacity="0.7" stroke-linecap="round"/>
+<circle cx="50" cy="24" r="1.5" fill="${c}" fill-opacity="0.8"/>
+<path d="M34,44 C32,44 31,47 32,50 C33,52 35,52 36,50" fill="${sk}" stroke="${sk2}" stroke-width="0.4"/>
 </svg>`;
 }
+
 
 function renderBattleSides(){
   const myS=myBattleSuper, oppS=oppBattleSuper;
@@ -9775,7 +9867,7 @@ function showBattleResult(won){
 // LOADING SCREEN
 // ══════════════════════════════════════════════════════════════════
 (function(){
-  const loadScreen = document.getElementById('loading-screen');
+  const loadScreen = document.getElementById('loading-screen') || {style:{opacity:1,display:'block'}};
   const loadBar = document.getElementById('load-bar');
   const loadText = document.getElementById('load-text');
   const steps = [
@@ -10869,8 +10961,8 @@ function chooseFaction(key){
 }
 
 function updateFactionHud(){
-  if(!myFaction) return;
-  const f = FACTIONS[myFaction];
+  if(!window.myFaction) return;
+  const f = FACTIONS[window.myFaction];
   const hud = document.getElementById('faction-hud');
   if(!hud) return;
   hud.style.display = 'flex';
@@ -11545,7 +11637,7 @@ function getTypeMultiplier(atkType, defType){
 }
 
 // Patch flashHit to show effectiveness badge
-const _origFlashHit = flashHit;
+const _origFlashHit = window.flashHit || function(){};
 window.flashHit = function(who, dmg, moveType, isBig){
   _origFlashHit(who, dmg, moveType, isBig);
   const atkType = moveType;
@@ -11591,7 +11683,7 @@ const _origWBFlashHit = window.flashHit;
 
 <script>
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js').catch(() => {});
+  navigator.serviceWorker.register('./sw.js').catch(() => {});
 }
 </script>
 </body>
