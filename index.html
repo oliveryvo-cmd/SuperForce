@@ -382,11 +382,235 @@ body{background:#000;overflow:hidden;font-family:'Segoe UI',sans-serif;color:#ff
 #ch-decline{background:#333;color:#aaa;}
 
 /* ── BATTLE SCREEN ── */
-#battle{position:fixed;inset:0;background:transparent;display:none;z-index:100;flex-direction:column;overflow:hidden;height:100%;pointer-events:none;}
-/* Animated battle background */
+/* ══════════════════════════════════════════════════════
+   ⚡ SUPERFORCE — CYBERPUNK SHONEN BATTLE SCREEN
+   ══════════════════════════════════════════════════════ */
+#battle{position:fixed;inset:0;background:#030210;display:none;z-index:100;flex-direction:column;overflow:hidden;height:100%;pointer-events:none;}
+
+/* ── CYBERPUNK BACKGROUND ── */
 #battle-bg{position:absolute;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
-.battle-bg-orb{position:absolute;border-radius:50%;filter:blur(60px);opacity:0.18;animation:bgPulse 4s ease-in-out infinite;}
-@keyframes bgPulse{0%,100%{transform:scale(1);opacity:0.18}50%{transform:scale(1.3);opacity:0.28}}
+#battle-bg::before{
+  content:'';position:absolute;inset:0;
+  background:
+    linear-gradient(180deg,#0a0520 0%,#060318 40%,#040215 100%);
+}
+/* City silhouette */
+#battle-bg::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:55%;
+  background:
+    linear-gradient(0deg,#020115 0%,transparent 100%);
+  pointer-events:none;
+}
+/* Perspective grid floor */
+.battle-bg-grid{
+  position:absolute;bottom:0;left:-20%;right:-20%;height:50%;
+  background-image:
+    linear-gradient(rgba(139,92,246,0.25) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(139,92,246,0.25) 1px,transparent 1px);
+  background-size:60px 60px;
+  transform:perspective(400px) rotateX(65deg);
+  transform-origin:bottom center;
+  pointer-events:none;
+}
+/* Neon scan lines */
+.battle-bg-scan{
+  position:absolute;inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.08) 3px,rgba(0,0,0,0.08) 4px);
+  pointer-events:none;z-index:2;
+}
+/* Diagonal laser beams */
+.battle-bg-beam{
+  position:absolute;width:3px;height:140%;top:-20%;
+  background:linear-gradient(180deg,transparent,rgba(168,85,247,0.6),transparent);
+  filter:blur(3px);
+  pointer-events:none;
+}
+.battle-bg-beam.b1{left:20%;transform:rotate(-15deg);animation:beamPulse 3s ease-in-out infinite;}
+.battle-bg-beam.b2{right:22%;transform:rotate(15deg);background:linear-gradient(180deg,transparent,rgba(251,191,36,0.5),transparent);animation:beamPulse 3s ease-in-out infinite 1s;}
+.battle-bg-beam.b3{left:50%;transform:rotate(0deg);background:linear-gradient(180deg,transparent,rgba(236,72,153,0.4),transparent);animation:beamPulse 4s ease-in-out infinite 0.5s;}
+@keyframes beamPulse{0%,100%{opacity:0.4}50%{opacity:1}}
+/* Orbs */
+.battle-bg-orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:0.15;animation:bgPulse 4s ease-in-out infinite;}
+@keyframes bgPulse{0%,100%{transform:scale(1);opacity:0.15}50%{transform:scale(1.3);opacity:0.25}}
+
+/* ── BATTLE HEADER ── */
+#battle-header{
+  position:absolute;top:0;left:0;right:0;z-index:10;
+  text-align:center;padding:10px 0 0;pointer-events:none;
+}
+#battle-header .bh-title{
+  font-size:1.6rem;font-weight:900;letter-spacing:6px;
+  background:linear-gradient(90deg,#f59e0b,#fbbf24,#f59e0b);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+  filter:drop-shadow(0 0 20px #f59e0b88);
+  line-height:1;
+}
+#battle-header .bh-title span{
+  background:linear-gradient(90deg,#e879f9,#a855f7);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+#battle-header .bh-sub{
+  font-size:0.42rem;letter-spacing:4px;color:#666;margin-top:1px;
+}
+
+/* ── TOP-CORNER HP BARS ── */
+#battle-my-hud,#battle-opp-hud{
+  position:absolute;top:56px;z-index:10;
+  background:rgba(0,0,12,0.85);
+  border:1px solid;
+  border-radius:8px;padding:7px 10px;min-width:160px;max-width:200px;
+  backdrop-filter:blur(8px);pointer-events:none;
+}
+#battle-my-hud{left:10px;border-color:#3b82f655;}
+#battle-opp-hud{right:10px;border-color:#ef444455;text-align:right;}
+.bhud-top{display:flex;align-items:center;gap:8px;margin-bottom:5px;}
+#battle-opp-hud .bhud-top{flex-direction:row-reverse;}
+.bhud-arch{
+  width:32px;height:32px;border-radius:6px;border:1px solid currentColor;
+  display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;
+  background:rgba(0,0,0,0.5);
+}
+.bhud-info{flex:1;}
+.bhud-name{font-size:0.55rem;font-weight:900;letter-spacing:2px;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.bhud-type{font-size:0.4rem;letter-spacing:2px;margin-top:1px;}
+.bhud-hp-track{height:6px;background:#111;border-radius:3px;overflow:hidden;margin-top:4px;}
+.bhud-hp-fill{height:100%;border-radius:3px;transition:width 0.5s ease,background 0.5s;}
+.bhud-hp-num{font-size:0.42rem;color:#888;margin-top:2px;}
+
+/* ── ARENA REDESIGN ── */
+#battle-arena{
+  position:absolute;top:0;bottom:0;left:0;right:0;
+  display:flex;align-items:flex-end;justify-content:space-between;
+  padding:0 0 210px 0;
+  overflow:hidden;z-index:3;
+  background:none;
+}
+.combatant{
+  display:flex;flex-direction:column;align-items:center;
+  width:48%;max-width:none;min-width:0;
+  padding-bottom:20px;
+}
+#my-combatant{align-items:flex-start;padding-left:5%;}
+#opp-combatant{align-items:flex-end;padding-right:5%;}
+
+/* ── SPRITE CARDS ── */
+.combatant-sprite{
+  width:min(42vw,190px)!important;
+  height:min(52vw,240px)!important;
+  border-radius:8px!important;
+  display:flex;align-items:flex-end;justify-content:center;
+  position:relative;overflow:hidden;
+  border:2px solid!important;
+  background:radial-gradient(ellipse at bottom,rgba(6,4,20,0.9) 20%,rgba(0,0,0,0.98) 100%)!important;
+  transition:all 0.3s cubic-bezier(0.25,1,0.5,1);
+  box-shadow:0 0 30px currentColor,0 4px 40px rgba(0,0,0,0.8)!important;
+}
+/* Corner trim on sprite cards */
+.combatant-sprite::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,transparent,currentColor,transparent);
+  opacity:0.6;z-index:10;pointer-events:none;
+}
+
+/* ── COMBATANT LABELS ── */
+.combatant-trainer{
+  font-size:0.42rem;letter-spacing:3px;color:#555;margin-bottom:4px;
+}
+.combatant-name-badge{
+  font-size:0.65rem;font-weight:900;letter-spacing:3px;
+  background:rgba(0,0,0,0.8);border:1px solid currentColor;
+  border-radius:4px;padding:4px 12px;margin-top:8px;color:#fff;
+  text-shadow:0 0 10px currentColor;
+}
+/* Hide old combatant-info (HP moved to top HUD) */
+.combatant-info{display:none!important;}
+.combatant-shadow{display:none!important;}
+
+/* ── VS TEXT ── */
+#battle-vs{
+  position:absolute;left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  z-index:8;
+  font-size:clamp(3rem,10vw,5.5rem);
+  font-weight:900;letter-spacing:4px;
+  font-style:italic;
+  background:linear-gradient(180deg,#f0abfc,#ec4899,#be185d);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+  filter:drop-shadow(0 0 30px #ec489988) drop-shadow(0 0 60px #7c3aed55);
+  animation:vsPulse 2s ease-in-out infinite;
+  pointer-events:none;
+  text-shadow:none;
+}
+@keyframes vsPulse{
+  0%,100%{filter:drop-shadow(0 0 20px #ec489988) drop-shadow(0 0 40px #7c3aed55);}
+  50%{filter:drop-shadow(0 0 40px #f0abfc) drop-shadow(0 0 80px #ec4899);}
+}
+/* Lightning bolt through VS */
+#battle-vs::after{
+  content:'';position:absolute;top:-20%;left:50%;width:4px;height:140%;
+  transform:translateX(-50%);
+  background:linear-gradient(180deg,transparent 0%,#fbbf24 30%,#ec4899 50%,#fbbf24 70%,transparent 100%);
+  filter:blur(4px);
+  animation:boltFlash 1.5s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes boltFlash{0%,100%{opacity:0.3}50%{opacity:1}}
+
+/* ── BATTLE ACTIONS (bottom panel) ── */
+#battle-actions{
+  position:absolute;bottom:0;left:0;right:0;z-index:20;
+  background:linear-gradient(0deg,rgba(0,0,10,0.98) 0%,rgba(2,1,16,0.95) 100%);
+  border-top:1px solid #1a0a3a;
+  padding:8px 12px 14px;
+  pointer-events:all;
+}
+#battle-actions-label{
+  font-size:0.45rem;letter-spacing:4px;color:#555;
+  margin-bottom:6px;text-align:center;
+}
+#attack-grid{
+  display:flex!important;flex-wrap:wrap;gap:6px;
+  margin-bottom:6px;
+}
+.attack-btn{
+  flex:1;min-width:80px;
+  background:rgba(0,0,20,0.9)!important;
+  border:1px solid!important;
+  border-radius:6px!important;
+  padding:8px 10px!important;
+  cursor:pointer;
+  text-align:left;
+  transition:all 0.15s!important;
+  position:relative;overflow:hidden;
+}
+.attack-btn:hover{
+  transform:translateY(-2px);
+  background:rgba(0,0,40,0.95)!important;
+}
+.attack-btn:active{transform:translateY(0);}
+.attack-btn::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:currentColor;opacity:0.3;
+}
+.atk-name{
+  display:block;font-size:0.58rem!important;font-weight:900!important;
+  letter-spacing:2px;margin-bottom:3px;
+}
+.atk-meta{display:flex;gap:4px;flex-wrap:wrap;align-items:center;}
+.atk-power{font-size:0.42rem!important;color:#888!important;letter-spacing:1px;}
+.atk-acc{font-size:0.42rem!important;letter-spacing:1px;}
+.atk-type{font-size:0.38rem!important;letter-spacing:1px;border:1px solid!important;border-radius:3px!important;padding:1px 4px!important;}
+.atk-bar{display:none!important;}
+
+/* Stage glow line */
+#battle-arena::before{
+  content:'';position:absolute;bottom:210px;left:5%;right:5%;height:1px;
+  background:linear-gradient(90deg,transparent,#a855f733,#ec489966,#a855f733,transparent);
+  z-index:4;pointer-events:none;
+}
 @keyframes trainerLvlUp{0%{opacity:0;transform:translate(-50%,-50%) scale(0.4)}15%{opacity:1;transform:translate(-50%,-50%) scale(1.15)}25%{transform:translate(-50%,-50%) scale(1)}85%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(0.9)}}
 #battle-arena{position:relative;z-index:1;}
 /* Attack animation */
@@ -2116,11 +2340,43 @@ body{background:#000;overflow:hidden;font-family:'Segoe UI',sans-serif;color:#ff
 
 <!-- Battle screen -->
 <div id="battle">
-  <!-- Animated background -->
+  <!-- Cyberpunk background -->
   <div id="battle-bg">
-    <div class="battle-bg-orb" id="bg-orb-my"  style="width:300px;height:300px;bottom:-80px;left:-60px;animation-delay:0s;"></div>
-    <div class="battle-bg-orb" id="bg-orb-opp" style="width:280px;height:280px;bottom:-60px;right:-40px;animation-delay:1.5s;"></div>
-    <div class="battle-bg-orb" style="width:200px;height:200px;top:20px;left:50%;margin-left:-100px;background:#ffffff08;animation-delay:0.8s;"></div>
+    <div class="battle-bg-grid"></div>
+    <div class="battle-bg-scan"></div>
+    <div class="battle-bg-beam b1"></div>
+    <div class="battle-bg-beam b2"></div>
+    <div class="battle-bg-beam b3"></div>
+    <div class="battle-bg-orb" id="bg-orb-my"  style="width:340px;height:340px;bottom:100px;left:-60px;animation-delay:0s;"></div>
+    <div class="battle-bg-orb" id="bg-orb-opp" style="width:320px;height:320px;bottom:100px;right:-40px;animation-delay:1.5s;"></div>
+  </div>
+  <!-- SUPERFORCE Header -->
+  <div id="battle-header">
+    <div class="bh-title">SUPER<span>FORCE</span></div>
+    <div class="bh-sub">A CYBERPUNK SHONEN ADVENTURE</div>
+  </div>
+  <!-- Top-corner HP HUDs -->
+  <div id="battle-my-hud" style="border-color:#3b82f655;">
+    <div class="bhud-top">
+      <div class="bhud-arch" id="bhud-my-arch" style="color:#3b82f6;">⚡</div>
+      <div class="bhud-info">
+        <div class="bhud-name" id="bhud-my-name">—</div>
+        <div class="bhud-type" id="bhud-my-type" style="color:#3b82f6;">—</div>
+      </div>
+    </div>
+    <div class="bhud-hp-track"><div class="bhud-hp-fill" id="bhud-my-fill" style="width:100%;background:#4ade80;"></div></div>
+    <div class="bhud-hp-num">HP <span id="bhud-my-num">—</span></div>
+  </div>
+  <div id="battle-opp-hud" style="border-color:#ef444455;">
+    <div class="bhud-top">
+      <div class="bhud-arch" id="bhud-opp-arch" style="color:#ef4444;">🔥</div>
+      <div class="bhud-info" style="text-align:right;">
+        <div class="bhud-name" id="bhud-opp-name">—</div>
+        <div class="bhud-type" id="bhud-opp-type" style="color:#ef4444;">—</div>
+      </div>
+    </div>
+    <div class="bhud-hp-track"><div class="bhud-hp-fill" id="bhud-opp-fill" style="width:100%;background:#ef4444;"></div></div>
+    <div class="bhud-hp-num" style="text-align:right;">HP <span id="bhud-opp-num">—</span></div>
   </div>
   <!-- Projectile -->
   <div id="projectile"></div>
@@ -2151,8 +2407,9 @@ body{background:#000;overflow:hidden;font-family:'Segoe UI',sans-serif;color:#ff
     <div class="combatant" id="my-combatant">
       <div class="combatant-trainer" id="my-trainer-label">YOU</div>
       <div class="combatant-sprite" id="my-sprite"></div>
-      <div class="combatant-shadow"></div>
-      <div class="combatant-info">
+      <div class="combatant-name-badge" id="my-name-badge">—</div>
+      <!-- Hidden elements kept for JS compatibility -->
+      <div class="combatant-info" style="display:none!important;">
         <div class="combatant-name" id="my-name">—</div>
         <div style="display:flex;align-items:center;gap:6px;">
           <div class="combatant-level" id="my-level">Lv.1</div>
@@ -2164,12 +2421,13 @@ body{background:#000;overflow:hidden;font-family:'Segoe UI',sans-serif;color:#ff
         </div>
       </div>
     </div>
-    <div id="battle-vs">⚔️</div>
+    <div id="battle-vs">VS</div>
     <div class="combatant" id="opp-combatant">
       <div class="combatant-trainer" id="opp-trainer-label">OPPONENT</div>
       <div class="combatant-sprite" id="opp-sprite"></div>
-      <div class="combatant-shadow"></div>
-      <div class="combatant-info">
+      <div class="combatant-name-badge" id="opp-name-badge">—</div>
+      <!-- Hidden elements kept for JS compatibility -->
+      <div class="combatant-info" style="display:none!important;">
         <div class="combatant-name" id="opp-name">—</div>
         <div style="display:flex;align-items:center;gap:6px;">
           <div class="combatant-level" id="opp-level">Lv.1</div>
@@ -5120,6 +5378,20 @@ function renderBattleSides(){
   document.getElementById('my-type').textContent=myS.type.toUpperCase();
   document.getElementById('my-type').style.cssText=`color:${col(myS)};border-color:${col(myS)}44`;
   setHpBar('my',myS.hp,myS.maxHp);
+  // Name badge under sprite
+  const myBadge=document.getElementById('my-name-badge');
+  if(myBadge){myBadge.textContent=(myS.nickname||myS.name).toUpperCase();myBadge.style.color=col(myS);myBadge.style.borderColor=col(myS)+'88';}
+  // Top HUD
+  const myArch=ARCHETYPES[myS.type]||'speedster';
+  const myArchIcon={'super-speedster':'⚡','super-juggernaut':'🛡️','super-assassin':'👁️','super-elemental':'🔥'}[myArch]||myS.icon||'⚡';
+  const mhArch=document.getElementById('bhud-my-arch');
+  if(mhArch){mhArch.textContent=myArchIcon;mhArch.style.color=col(myS);mhArch.style.borderColor=col(myS)+'88';}
+  const mhName=document.getElementById('bhud-my-name');
+  if(mhName) mhName.textContent=(myS.nickname||myS.name).toUpperCase().slice(0,18);
+  const mhType=document.getElementById('bhud-my-type');
+  if(mhType){mhType.textContent=myArch.replace('super-','').toUpperCase();mhType.style.color=col(myS);}
+  const myHud=document.getElementById('battle-my-hud');
+  if(myHud) myHud.style.borderColor=col(myS)+'55';
 
   const oppEl=document.getElementById('opp-sprite');
   oppEl.innerHTML=buildSpriteHTML(oppS);
@@ -5132,19 +5404,39 @@ function renderBattleSides(){
   document.getElementById('opp-type').textContent=oppS.type.toUpperCase();
   document.getElementById('opp-type').style.cssText=`color:${col(oppS)};border-color:${col(oppS)}44`;
   setHpBar('opp',oppS.hp,oppS.maxHp);
+  // Name badge under sprite
+  const oppBadge=document.getElementById('opp-name-badge');
+  if(oppBadge){oppBadge.textContent=(oppS.nickname||oppS.name).toUpperCase();oppBadge.style.color=col(oppS);oppBadge.style.borderColor=col(oppS)+'88';}
+  // Top HUD
+  const oppArch=ARCHETYPES[oppS.type]||'speedster';
+  const oppArchIcon={'super-speedster':'⚡','super-juggernaut':'🛡️','super-assassin':'👁️','super-elemental':'🔥'}[oppArch]||oppS.icon||'🔥';
+  const ohArch=document.getElementById('bhud-opp-arch');
+  if(ohArch){ohArch.textContent=oppArchIcon;ohArch.style.color=col(oppS);ohArch.style.borderColor=col(oppS)+'88';}
+  const ohName=document.getElementById('bhud-opp-name');
+  if(ohName) ohName.textContent=(oppS.nickname||oppS.name).toUpperCase().slice(0,18);
+  const ohType=document.getElementById('bhud-opp-type');
+  if(ohType){ohType.textContent=oppArch.replace('super-','').toUpperCase();ohType.style.color=col(oppS);}
+  const oppHud=document.getElementById('battle-opp-hud');
+  if(oppHud) oppHud.style.borderColor=col(oppS)+'55';
   // Also update world battle HUD
   if(wbActive) updateWbHud();
 }
 
 function setHpBar(who,hp,max){
   const pct=Math.max(0,hp/max*100);
+  const col=pct>50?'#4ade80':pct>25?'#f59e0b':'#ef4444';
   const bar=document.getElementById(who+'-hp-bar');
-  if(bar){ bar.style.width=pct+'%'; bar.style.background=pct>50?'#4ade80':pct>25?'#f59e0b':'#ef4444'; }
+  if(bar){ bar.style.width=pct+'%'; bar.style.background=col; }
   const numEl=document.getElementById(who+'-hp-num');
   if(numEl) numEl.textContent=`${Math.max(0,Math.round(hp))}/${max}`;
-  // Also update world battle HUD
+  // Top HUD fill
+  const topFill=document.getElementById('bhud-'+who+'-fill');
+  if(topFill){ topFill.style.width=pct+'%'; topFill.style.background=col; }
+  const topNum=document.getElementById('bhud-'+who+'-num');
+  if(topNum) topNum.textContent=`${Math.max(0,Math.round(hp))}/${max}`;
+  // World battle HUD
   const wbBar=document.getElementById('wb-'+who+'-hp-bar');
-  if(wbBar){ wbBar.style.width=pct+'%'; wbBar.style.background=pct>50?'#4ade80':pct>25?'#f59e0b':'#ef4444'; }
+  if(wbBar){ wbBar.style.width=pct+'%'; wbBar.style.background=col; }
   const wbNum=document.getElementById('wb-'+who+'-hp-num');
   if(wbNum) wbNum.textContent=`${Math.max(0,Math.round(hp))}/${max}`;
 }
