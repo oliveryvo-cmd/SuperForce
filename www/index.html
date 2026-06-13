@@ -5516,8 +5516,26 @@ function renderSuperToSprite(def, bodyEl, isMirror, isEvolved){
   }
 
   const defC = {...def, color: colHex};
-  const mesh = makeProcMesh(defC);
+  // Use the same named mesh if available (exact same model as in the world)
+  const grp = new THREE.Group();
+  if(typeof MESH_MAKERS !== 'undefined' && MESH_MAKERS[def.name]){
+    grp.add(MESH_MAKERS[def.name]());
+  } else {
+    grp.add(makeProcMesh(defC));
+  }
+  const mesh = grp;
   mesh.rotation.y = isMirror ? Math.PI + 0.25 : -0.25;
+
+  // Compute bounding box to auto-frame the mesh
+  const bbox = new THREE.Box3().setFromObject(mesh);
+  const center = new THREE.Vector3();
+  bbox.getCenter(center);
+  const size = new THREE.Vector3();
+  bbox.getSize(size);
+  const maxDim = Math.max(size.x, size.y, size.z);
+  mesh.position.sub(center); // center the mesh
+  mesh.position.y += size.y * 0.5; // shift up so feet are near bottom
+
   if(isEvolved){
     mesh.scale.setScalar(1.2);
     mesh.traverse(o=>{
@@ -5531,9 +5549,11 @@ function renderSuperToSprite(def, bodyEl, isMirror, isEvolved){
   }
   scene3.add(mesh);
 
-  const cam3 = new THREE.PerspectiveCamera(38, W/H, 0.1, 50);
-  cam3.position.set(0, 1.9, 5.2);
-  cam3.lookAt(0, 1.3, 0);
+  // Auto-fit camera to mesh size
+  const camDist = maxDim * 2.2;
+  const cam3 = new THREE.PerspectiveCamera(42, W/H, 0.1, 100);
+  cam3.position.set(0, size.y * 0.35, camDist);
+  cam3.lookAt(0, 0, 0);
 
   let t = 0;
   function loop(){
